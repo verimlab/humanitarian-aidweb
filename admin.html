@@ -1,0 +1,1828 @@
+<!DOCTYPE html>
+<html lang="nn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administrasjon - Humanitær hjelp</title>
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="stylesheet" href="assets/css/wcag.css">
+  <script src="config.js"></script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0f1115;
+      --card-bg: #161a22;
+      --text: #e1e7ef;
+      --text-muted: #94a3b8;
+      --accent: #0062ba;
+      --accent-hover: #004f99;
+      --input-border: #1e293b;
+      --input-focus: rgba(56, 189, 248, 0.15);
+      --shadow: rgba(0, 0, 0, 0.25);
+      --danger: #ef4444;
+      --danger-hover: #f87171;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --accent: #0062ba;
+      --accent-hover: #004f99;
+      --input-border: #e2e8f0;
+      --input-focus: rgba(2, 132, 199, 0.1);
+      --shadow: rgba(15, 23, 42, 0.05);
+    }
+    
+    /* High Contrast Dark */
+    html[data-contrast="hc-dark"] {
+      color-scheme: dark;
+      --bg: #000000;
+      --card-bg: #000000;
+      --text: #ffffff;
+      --text-muted: #ffff00;
+      --accent: #ffff00;
+      --accent-hover: #ffff00;
+      --input-border: #ffffff;
+      --input-focus: rgba(255, 255, 0, 0.4);
+      --shadow: transparent;
+      --danger: #ffff00;
+      --danger-hover: #ffff00;
+    }
+    html[data-contrast="hc-dark"] * {
+      outline-color: #ffff00 !important;
+    }
+    html[data-contrast="hc-dark"] a {
+      text-decoration: underline;
+    }
+
+    /* High Contrast Light */
+    html[data-contrast="hc-light"] {
+      color-scheme: light;
+      --bg: #ffffff;
+      --card-bg: #ffffff;
+      --text: #000000;
+      --text-muted: #000000;
+      --accent: #0000ff;
+      --accent-hover: #0000ff;
+      --input-border: #000000;
+      --input-focus: rgba(0, 0, 255, 0.3);
+      --shadow: transparent;
+      --danger: #0000ff;
+      --danger-hover: #0000ff;
+    }
+    html[data-contrast="hc-light"] * {
+      outline-color: #0000ff !important;
+    }
+    html[data-contrast="hc-light"] a {
+      text-decoration: underline;
+    }
+
+    /* Font sizing rules scaled at root level */
+    html[data-font-size="normal"] {
+      font-size: 16px;
+    }
+    html[data-font-size="large"] {
+      font-size: 20px;
+    }
+    html[data-font-size="xlarge"] {
+      font-size: 24px;
+    }
+
+    /* Enhanced spacing for readability */
+    html[data-font-spacing="increased"] {
+      letter-spacing: 0.08em;
+      word-spacing: 0.15em;
+    }
+    html[data-font-spacing="increased"] p, 
+    html[data-font-spacing="increased"] span, 
+    html[data-font-spacing="increased"] li,
+    html[data-font-spacing="increased"] label,
+    html[data-font-spacing="increased"] input,
+    html[data-font-spacing="increased"] button,
+    html[data-font-spacing="increased"] select,
+    html[data-font-spacing="increased"] th,
+    html[data-font-spacing="increased"] td {
+      line-height: 1.8 !important;
+    }
+
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0;
+    }
+    
+    body { 
+      background-color: var(--bg); 
+      color: var(--text); 
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    header { 
+      background-color: var(--card-bg);
+      padding: 0.75rem 1rem; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      box-shadow: 0 1px 3px var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: padding 0.3s ease;
+    }
+    
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .site-logo {
+      height: 30px;
+      width: auto;
+      object-fit: contain;
+    }
+    .site-title-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+    .site-title-main { 
+      font-size: 1.0rem; 
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      line-height: 1.1;
+    }
+    .site-title-sub {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+      color: var(--text-muted);
+    }
+
+    /* Controls */
+    .controls { 
+      display: flex; 
+      align-items: center;
+      gap: 1rem; 
+      position: relative;
+    }
+    .lang-selector {
+      display: flex;
+      background-color: var(--bg);
+      padding: 0.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--input-border);
+    }
+    
+    button, select, input {
+      font-family: inherit;
+    }
+
+    button {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+    .lang-selector button.active { 
+      background-color: var(--card-bg); 
+      color: var(--accent); 
+      box-shadow: 0 1px 2px var(--shadow);
+    }
+    .lang-selector button:hover:not(.active) {
+      color: var(--text);
+    }
+    
+    #themeToggle, #accToggle {
+      border: 1px solid var(--input-border);
+      background-color: var(--card-bg);
+      color: var(--text);
+      box-shadow: 0 1px 2px var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      min-width: 40px;
+      border-radius: 8px;
+    }
+    #themeToggle svg, #accToggle svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+    #themeToggle:hover, #accToggle:hover {
+      background-color: var(--bg);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Accessibility Dropdown Panel */
+    .accessibility-panel {
+      position: absolute;
+      top: calc(100% + 0.5rem);
+      right: 0;
+      background-color: var(--card-bg);
+      border: 2px solid var(--input-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      width: 320px;
+      box-shadow: 0 10px 25px var(--shadow);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      text-align: left;
+    }
+    .accessibility-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .accessibility-section h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+    .accessibility-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .accessibility-options button {
+      width: 100%;
+      text-align: left;
+      padding: 0.6rem 0.8rem;
+      background-color: var(--bg);
+      border: 1px solid var(--input-border);
+      color: var(--text);
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .accessibility-options button:hover {
+      border-color: var(--accent);
+      background-color: var(--input-focus);
+    }
+    .accessibility-options button.active {
+      background-color: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+    }
+    [data-theme="light"] .accessibility-options button.active,
+    [data-contrast="hc-light"] .accessibility-options button.active {
+      color: #ffffff;
+    }
+    [data-contrast="hc-dark"] .accessibility-options button.active {
+      color: #000000;
+    }
+
+    /* Dashboard Layout */
+    main { 
+      padding: 2rem 1.5rem; 
+      max-width: 1200px; 
+      margin: 0 auto;
+      flex: 1;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px var(--shadow);
+    }
+    .stat-card h3 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+    .stat-value {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    /* Actions Toolbar */
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      background-color: var(--card-bg);
+      border: 1px solid var(--input-border);
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px var(--shadow);
+    }
+    .toolbar-left {
+      display: flex;
+      gap: 0.75rem;
+      flex: 1;
+      min-width: 280px;
+    }
+    .search-input {
+      flex: 1;
+      padding: 0.625rem 0.875rem;
+      background-color: var(--bg);
+      border: 1px solid var(--input-border);
+      color: var(--text);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--input-focus);
+    }
+    .filter-select {
+      padding: 0.625rem 0.875rem;
+      background-color: var(--bg);
+      border: 1px solid var(--input-border);
+      color: var(--text);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+      cursor: pointer;
+    }
+    .filter-select:focus {
+      border-color: var(--accent);
+    }
+    .toolbar-right {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    
+    /* Standard Buttons */
+    .btn-action {
+      padding: 0.625rem 1.25rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 4px var(--shadow);
+    }
+    .btn-add {
+      background-color: var(--accent);
+      color: #0f1115;
+    }
+    [data-theme="light"] .btn-add,
+    [data-contrast="hc-light"] .btn-add {
+      color: #ffffff;
+    }
+    .btn-add:hover {
+      background-color: var(--accent-hover);
+    }
+    .btn-export {
+      background-color: var(--card-bg);
+      border: 1px solid var(--input-border);
+      color: var(--text);
+    }
+    .btn-export:hover {
+      background-color: var(--bg);
+      border-color: var(--accent);
+    }
+    .btn-clear {
+      background-color: transparent;
+      border: 1px solid var(--danger);
+      color: var(--danger);
+    }
+    .btn-clear:hover {
+      background-color: var(--danger);
+      color: #ffffff;
+    }
+    [data-contrast="hc-dark"] .btn-clear:hover,
+    [data-contrast="hc-light"] .btn-clear:hover {
+      color: #000000;
+    }
+
+    /* Table Styling */
+    .table-container {
+      background-color: var(--card-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      box-shadow: 0 4px 6px var(--shadow);
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    th, td {
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--input-border);
+    }
+    th {
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background-color: rgba(0,0,0,0.05);
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tr:hover td {
+      background-color: rgba(255,255,255,0.01);
+    }
+    [data-theme="light"] tr:hover td {
+      background-color: rgba(0,0,0,0.01);
+    }
+
+    /* Table Actions */
+    .btn-delete {
+      color: var(--danger);
+      font-weight: 700;
+      background: transparent;
+      border: none;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .btn-delete:hover {
+      background-color: rgba(239, 68, 68, 0.1);
+    }
+
+    /* Empty State */
+    .empty-state {
+      padding: 4rem 2rem;
+      text-align: center;
+      color: var(--text-muted);
+    }
+    .empty-state p {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      animation: fadeIn 0.2s ease-out;
+    }
+    .modal-content {
+      background-color: var(--card-bg);
+      border: 1px solid var(--input-border);
+      padding: 2.25rem;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 16px;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
+      animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes scaleUp {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-content h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 800;
+    }
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background-color: var(--bg);
+      border: 1px solid var(--input-border);
+      color: var(--text);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--input-focus);
+    }
+    .row {
+      display: flex;
+      gap: 1rem;
+    }
+    .row .form-group {
+      flex: 1;
+    }
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1.75rem;
+    }
+    .btn-secondary {
+      background-color: transparent;
+      border: 1px solid var(--input-border);
+      color: var(--text);
+      padding: 0.625rem 1.25rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover {
+      background-color: var(--bg);
+    }
+    .btn-primary {
+      background-color: var(--accent);
+      color: #0f1115;
+      padding: 0.625rem 1.25rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    [data-theme="light"] .btn-primary,
+    [data-contrast="hc-light"] .btn-primary {
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+    }
+
+    /* Footer styling */
+    footer {
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      border-top: 1px solid var(--input-border);
+      background-color: var(--card-bg);
+      margin-top: 4rem;
+      text-align: center;
+    }
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 1023px) {
+      .accessibility-panel {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        border-radius: 16px 16px 0 0;
+        border-bottom: none;
+        box-shadow: 0 -10px 25px var(--shadow);
+      }
+    }
+    @media (max-width: 768px) {
+      main { padding: 1.5rem 1rem; }
+      .toolbar { flex-direction: column; align-items: stretch; }
+      .toolbar-left { flex-direction: column; min-width: 0; }
+      .toolbar-right { justify-content: stretch; }
+      .toolbar-right button { flex: 1; text-align: center; justify-content: center; }
+      th, td { padding: 0.75rem 1rem; }
+    }
+
+    /* Table columns word wrapping and scroll improvements */
+    #regTable th,
+    #regTable td {
+      white-space: nowrap;
+    }
+    #regTable td:nth-child(1), /* Name column */
+    #regTable td:nth-child(5)  /* Email column */ {
+      white-space: normal;
+      word-break: break-word;
+      min-width: 150px;
+    }
+
+    /* Header stack on mobile */
+    @media (max-width: 576px) {
+      header {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+        align-items: center;
+        text-align: center;
+      }
+      .header-brand {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .site-logo {
+        height: 24px;
+      }
+      .controls {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .modal-content {
+        padding: 1.5rem;
+        border-radius: 12px;
+      }
+    }
+
+    /* Tablet/Portrait intermediate header adjustments */
+    @media (min-width: 577px) and (max-width: 900px) {
+      .site-title-main {
+        font-size: 0.85rem;
+      }
+      .site-title-sub {
+        font-size: 0.65rem;
+      }
+      .lang-selector button {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+      }
+      .controls {
+        gap: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+  <!-- Adgangskontroll (Login Overlay) -->
+  <div id="loginOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1rem;">
+    <div class="stat-card" style="width: 100%; max-width: 400px; text-align: center; padding: 2.5rem 2rem; box-shadow: 0 10px 25px var(--shadow);">
+      <h2 style="margin-bottom: 1.5rem; font-weight: 800;" id="loginTitle">Adgangskontroll</h2>
+      <form id="loginForm" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div class="form-group" style="text-align: left;">
+          <label for="adminPassword" style="display: block; margin-bottom: 0.5rem; font-size: 0.85rem; font-weight: 600;" id="lblAdminPassword">Passord</label>
+          <input type="password" id="adminPassword" required placeholder="••••••••" style="width: 100%; padding: 0.75rem 1rem; background-color: var(--bg); border: 1px solid var(--input-border); color: var(--text); border-radius: 8px; font-size: 0.95rem;">
+        </div>
+        <button type="submit" class="btn-action btn-add" style="justify-content: center; width: 100%; height: 46px;">
+          <span id="txtBtnLogin">Logg inn</span>
+        </button>
+        <p id="loginError" style="color: var(--danger); font-size: 0.9rem; font-weight: 600; min-height: 1.2rem; margin-top: 0.5rem;"></p>
+      </form>
+    </div>
+  </div>
+
+  <a href="#main-content" class="skip-link" id="skipLink">Hopp til hovudinnhald</a>
+
+  <header>
+    <div class="header-brand">
+      <img src="logo.png" alt="Nord-Fron logo" class="site-logo">
+      <div class="site-title-container">
+        <p class="site-title-main">Kyrkja i Nord-Fron</p>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <div class="lang-selector" role="group" aria-label="Språk">
+        <button type="button" data-lang="nyn" class="active" aria-pressed="true" lang="nn">NYN</button>
+        <button type="button" data-lang="bok" aria-pressed="false" lang="nb">BOK</button>
+        <button type="button" data-lang="eng" aria-pressed="false" lang="en">ENG</button>
+      </div>
+      <button type="button" id="themeToggle" aria-label="Bytt fargetema">
+        <svg viewBox="0 0 24 24" id="sunIcon">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg viewBox="0 0 24 24" id="moonIcon" style="display: none;">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      <button type="button" id="accToggle" aria-label="Tilgjengelegheit" aria-expanded="false" aria-controls="accPanel">
+        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="4" r="2"></circle>
+          <path d="M4 9h16"></path>
+          <path d="M12 6v6"></path>
+          <path d="M8 22l4-10 4 10"></path>
+        </svg>
+      </button>
+      <div id="accPanel" class="accessibility-panel" style="display: none;" role="region" aria-labelledby="accToggle">
+        <div class="accessibility-section">
+          <h4 id="lblAccFontSize">Font Size</h4>
+          <div class="accessibility-options" id="accFontSizeOptions">
+            <button type="button" data-size="normal" class="active"><span id="txtSizeNormal">Normal</span></button>
+            <button type="button" data-size="large"><span id="txtSizeLarge">Large (+25%)</span></button>
+            <button type="button" data-size="xlarge"><span id="txtSizeXLarge">Extra Large (+50%)</span></button>
+          </div>
+        </div>
+        <div class="accessibility-section">
+          <h4 id="lblAccContrast">Contrast</h4>
+          <div class="accessibility-options" id="accContrastOptions">
+            <button type="button" data-contrast="standard" class="active"><span id="txtContrastStandard">Standard</span></button>
+            <button type="button" data-contrast="hc-dark"><span id="txtContrastHcDark">High Contrast (Dark)</span></button>
+            <button type="button" data-contrast="hc-light"><span id="txtContrastHcLight">High Contrast (Light)</span></button>
+          </div>
+        </div>
+        <div class="accessibility-section">
+          <h4 id="lblAccSpacing">Text Spacing</h4>
+          <div class="accessibility-options" id="accSpacingOptions">
+            <button type="button" data-spacing="standard" class="active"><span id="txtSpacingStandard">Standard</span></button>
+            <button type="button" data-spacing="increased"><span id="txtSpacingIncreased">Increased</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <h1 id="lblPageTitle">Administrasjon av matutdeling</h1>
+
+    <!-- Overview Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3 id="lblStatRegistrations">Total Registrations</h3>
+        <p class="stat-value" id="valStatRegistrations">0</p>
+      </div>
+      <div class="stat-card">
+        <h3 id="lblStatAdults">Total Adults</h3>
+        <p class="stat-value" id="valStatAdults">0</p>
+      </div>
+      <div class="stat-card">
+        <h3 id="lblStatChildren">Total Children</h3>
+        <p class="stat-value" id="valStatChildren">0</p>
+      </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div class="stat-card" style="margin-bottom: 2rem;">
+      <h3 id="lblSettingsTitle">Innstillingar for matutdeling</h3>
+      <form id="settingsForm" style="display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: flex-end; margin-top: 1.25rem;">
+        <div class="form-group" style="margin-bottom: 0; flex: 2; min-width: 200px;">
+          <label id="lblSettingsDate" for="settingsDate">Dato</label>
+          <input type="date" id="settingsDate" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 120px;">
+          <label id="lblSettingsStartTime" for="settingsStartTime">Starttid</label>
+          <input type="time" id="settingsStartTime" required>
+        </div>
+        <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 120px;">
+          <label id="lblSettingsEndTime" for="settingsEndTime">Sluttid</label>
+          <input type="time" id="settingsEndTime" required>
+        </div>
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.1rem; height: 50px;">
+          <button type="submit" class="btn-action btn-add" id="btnSaveSettings" style="white-space: nowrap;">
+            <span id="txtBtnSaveSettings">Lagre innstillingar</span>
+          </button>
+          <span id="settingsStatus" style="font-size: 0.9rem; font-weight: 600; color: #10b981; opacity: 0; transition: opacity 0.3s;"></span>
+        </div>
+      </form>
+    </div>
+
+    <!-- Actions Bar -->
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <input type="text" id="searchInput" class="search-input" placeholder="Søk på navn eller e-post...">
+        <select id="timeFilter" class="filter-select">
+          <option value="" id="optAllTimes">Alle tidspunkter</option>
+        </select>
+      </div>
+      <div class="toolbar-right">
+        <button type="button" class="btn-action btn-add" id="btnAddManually">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span id="txtBtnAdd">Registrer manuelt</span>
+        </button>
+        <button type="button" class="btn-action btn-export" id="btnExportCSV">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <span id="txtBtnExport">Eksporter CSV</span>
+        </button>
+        <button type="button" class="btn-action btn-clear" id="btnClearDatabase">
+          <span id="txtBtnClear">Slett alt</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container">
+      <table id="regTable">
+        <caption class="sr-only" id="tableCaption">Oversikt over registreringar for matutdeling</caption>
+        <thead>
+          <tr>
+            <th id="thName">Navn</th>
+            <th id="thTime">Tidspunkt</th>
+            <th id="thAdults">Voksne</th>
+            <th id="thChildren">Barn</th>
+            <th id="thEmail">E-post</th>
+            <th id="thDate">Registrert</th>
+            <th id="thActions">Handlinger</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Dynamically populated -->
+        </tbody>
+      </table>
+      <div id="emptyState" class="empty-state" style="display: none;">
+        <p id="txtEmptyState">Ingen registreringer funnet.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Manual Registration Modal -->
+  <div id="addModal" class="modal-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-content">
+      <h2 id="modalTitle">Manuell registrering</h2>
+      <form id="modalForm">
+        <div class="form-group">
+          <label id="lblModalName" for="modalInputName">Navn</label>
+          <input type="text" id="modalInputName" required placeholder="John Doe">
+        </div>
+        <div class="row">
+          <div class="form-group">
+            <label id="lblModalAdults" for="modalInputAdults">Antall voksne</label>
+            <input type="number" id="modalInputAdults" min="1" placeholder="1" required>
+          </div>
+          <div class="form-group">
+            <label id="lblModalChildren" for="modalInputChildren">Antall barn</label>
+            <input type="number" id="modalInputChildren" min="0" placeholder="0" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label id="lblModalEmail" for="modalInputEmail">E-postadresse (Valgfritt)</label>
+          <input type="email" id="modalInputEmail" placeholder="example@mail.com">
+        </div>
+        <div class="form-group">
+          <label id="lblModalTime" for="modalSelectTime">Tidspunkt</label>
+          <select id="modalSelectTime" required>
+            <!-- Dynamically populated -->
+          </select>
+        </div>
+        <div class="modal-buttons">
+          <button type="button" class="btn-secondary" id="btnModalCancel">Avbryt</button>
+          <button type="submit" class="btn-primary" id="btnModalSave">Lagre</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <p><span id="txtFooterBack">Gå til</span> <a href="Avtaleskjema%20for%20matutdeling%20-%20Nord-Fron%20kyrkjelege%20fellesr%C3%A5d.html" id="txtFooterBackLink">registreringsskjemaet</a></p>
+  </footer>
+
+  <script src="assets/js/a11y.js"></script>
+  <script>
+    const langButtons = document.querySelectorAll('.lang-selector button');
+    const themeToggle = document.getElementById('themeToggle');
+    const timeFilter = document.getElementById('timeFilter');
+    const modalSelectTime = document.getElementById('modalSelectTime');
+    const tableBody = document.getElementById('tableBody');
+    const emptyState = document.getElementById('emptyState');
+
+    let registrations = [];
+
+    const translations = {
+      nyn: {
+        pageTitle: "Administrasjon - Humanitær hjelp",
+        skipLink: "Hopp til hovudinnhald",
+        accTitle: "Tilgjengelegheit",
+        accFontSize: "Skriftstorleik",
+        accSizeNormal: "Normal",
+        accSizeLarge: "Stor (+25%)",
+        accSizeXLarge: "Ekstra stor (+50%)",
+        accContrast: "Kontrast",
+        accContrastStandard: "Standard",
+        accContrastHcDark: "Mørk høgkontrast",
+        accContrastHcLight: "Ljos høgkontrast",
+        accSpacing: "Tekstavstand",
+        accSpacingStandard: "Standard",
+        accSpacingIncreased: "Auka avstand",
+        lblSubtitle: "Nord-Fron kyrkjelege fellesråd",
+        lblPageTitle: "Administrasjon av matutdeling",
+        lblStatRegistrations: "Registreringar totalt",
+        lblStatAdults: "Vaksne totalt",
+        lblStatChildren: "Barn totalt",
+        searchInputPlaceholder: "Søk på namn eller e-post...",
+        optAllTimes: "Alle tidspunkt",
+        txtBtnAdd: "Registrer manuelt",
+        txtBtnExport: "Eksporter CSV",
+        txtBtnClear: "Slett alt",
+        thName: "Namn",
+        thTime: "Tidspunkt",
+        thAdults: "Vaksne",
+        thChildren: "Barn",
+        thEmail: "E-post",
+        thDate: "Registrert",
+        thActions: "Handlinger",
+        txtEmptyState: "Ingen registreringar funne.",
+        modalTitle: "Manuell registrering",
+        lblModalName: "Namn",
+        lblModalAdults: "Antall vaksne",
+        lblModalChildren: "Antall barn",
+        lblModalEmail: "E-postadresse (Valgfritt)",
+        lblModalTime: "Velg tidspunkt",
+        btnModalCancel: "Avbryt",
+        btnModalSave: "Lagre",
+        btnDelete: "Slett",
+        confirmClear: "Er du sikker på at du vil slette ALLE registreringar? Dette kan ikkje gjerast om.",
+        confirmDelete: "Er du sikker på at du vil slette denne registreringa?",
+        txtFooterBack: "Gå til",
+        txtFooterBackLink: "registreringsskjemaet",
+        tableCaption: "Oversikt over registreringar for matutdeling",
+        themeToggle: "Bytt fargetema",
+        lblSettingsTitle: "Innstillingar for matutdeling",
+        lblSettingsDate: "Dato",
+        lblSettingsStartTime: "Starttid",
+        lblSettingsEndTime: "Sluttid",
+        txtBtnSaveSettings: "Lagre innstillingar",
+        settingsSaved: "Innstillingane er lagra!",
+        errTimeOrder: "Starttid må vere før sluttid!",
+        loginTitle: "Adgangskontroll",
+        lblAdminPassword: "Passord",
+        txtBtnLogin: "Logg inn"
+      },
+      bok: {
+        pageTitle: "Administrasjon - Humanitær hjelp",
+        skipLink: "Hopp til hovedinnhold",
+        accTitle: "Tilgjengelighet",
+        accFontSize: "Skriftstørrelse",
+        accSizeNormal: "Normal",
+        accSizeLarge: "Stor (+25%)",
+        accSizeXLarge: "Ekstra stor (+50%)",
+        accContrast: "Kontrast",
+        accContrastStandard: "Standard",
+        accContrastHcDark: "Mørk høykontrast",
+        accContrastHcLight: "Lys høykontrast",
+        accSpacing: "Tekstavstand",
+        accSpacingStandard: "Standard",
+        accSpacingIncreased: "Økt avstand",
+        lblSubtitle: "Nord-Fron kirkelige fellesråd",
+        lblPageTitle: "Administrasjon av matutdeling",
+        lblStatRegistrations: "Registreringer totalt",
+        lblStatAdults: "Voksne totalt",
+        lblStatChildren: "Barn totalt",
+        searchInputPlaceholder: "Søk på navn eller e-post...",
+        optAllTimes: "Alle tidspunkter",
+        txtBtnAdd: "Registrer manuelt",
+        txtBtnExport: "Eksporter CSV",
+        txtBtnClear: "Slett alt",
+        thName: "Navn",
+        thTime: "Tidspunkt",
+        thAdults: "Voksne",
+        thChildren: "Barn",
+        thEmail: "E-post",
+        thDate: "Registrert",
+        thActions: "Handlinger",
+        txtEmptyState: "Ingen registreringer funnet.",
+        modalTitle: "Manuell registrering",
+        lblModalName: "Navn",
+        lblModalAdults: "Antall voksne",
+        lblModalChildren: "Antall barn",
+        lblModalEmail: "E-postadresse (Valgfritt)",
+        lblModalTime: "Velg tidspunkt",
+        btnModalCancel: "Avbryt",
+        btnModalSave: "Lagre",
+        btnDelete: "Slett",
+        confirmClear: "Er du sikker på at du vil slette ALLE registreringer? Dette kan ikke gjøres om.",
+        confirmDelete: "Er du sikker på at du vil slette denne registreringen?",
+        txtFooterBack: "Gå til",
+        txtFooterBackLink: "registreringsskjemaet",
+        tableCaption: "Oversikt over registreringer for matutdeling",
+        themeToggle: "Bytt fargetema",
+        lblSettingsTitle: "Innstillinger for matutdeling",
+        lblSettingsDate: "Dato",
+        lblSettingsStartTime: "Starttid",
+        lblSettingsEndTime: "Sluttid",
+        txtBtnSaveSettings: "Lagre innstillinger",
+        settingsSaved: "Innstillingene er lagret!",
+        errTimeOrder: "Starttid må være før sluttid!",
+        loginTitle: "Adgangskontroll",
+        lblAdminPassword: "Passord",
+        txtBtnLogin: "Logg inn"
+      },
+      eng: {
+        pageTitle: "Administration - Humanitarian Aid",
+        skipLink: "Skip to main content",
+        accTitle: "Accessibility",
+        accFontSize: "Font Size",
+        accSizeNormal: "Normal",
+        accSizeLarge: "Large (+25%)",
+        accSizeXLarge: "Extra Large (+50%)",
+        accContrast: "Contrast",
+        accContrastStandard: "Standard",
+        accContrastHcDark: "High Contrast (Dark)",
+        accContrastHcLight: "High Contrast (Light)",
+        accSpacing: "Text Spacing",
+        accSpacingStandard: "Standard",
+        accSpacingIncreased: "Increased Spacing",
+        lblSubtitle: "Nord-Fron Parish Council",
+        lblPageTitle: "Food Distribution Management",
+        lblStatRegistrations: "Total Registrations",
+        lblStatAdults: "Total Adults",
+        lblStatChildren: "Total Children",
+        searchInputPlaceholder: "Search by name or email...",
+        optAllTimes: "All Times",
+        txtBtnAdd: "Add Manually",
+        txtBtnExport: "Export CSV",
+        txtBtnClear: "Clear All",
+        thName: "Name",
+        thTime: "Time Slot",
+        thAdults: "Adults",
+        thChildren: "Children",
+        thEmail: "Email",
+        thDate: "Registered At",
+        thActions: "Actions",
+        txtEmptyState: "No registrations found.",
+        modalTitle: "Manual Registration",
+        lblModalName: "Name",
+        lblModalAdults: "Number of adults",
+        lblModalChildren: "Number of children",
+        lblModalEmail: "Email address (Optional)",
+        lblModalTime: "Select time slot",
+        btnModalCancel: "Cancel",
+        btnModalSave: "Save",
+        btnDelete: "Delete",
+        confirmClear: "Are you sure you want to delete ALL registrations? This cannot be undone.",
+        confirmDelete: "Are you sure you want to delete this registration?",
+        txtFooterBack: "Go to",
+        txtFooterBackLink: "registration form",
+        tableCaption: "Overview of food distribution registrations",
+        themeToggle: "Toggle color theme",
+        lblSettingsTitle: "Food Distribution Settings",
+        lblSettingsDate: "Date",
+        lblSettingsStartTime: "Start Time",
+        lblSettingsEndTime: "End Time",
+        txtBtnSaveSettings: "Save Settings",
+        settingsSaved: "Settings saved successfully!",
+        errTimeOrder: "Start time must be before end time!",
+        loginTitle: "Access Control",
+        lblAdminPassword: "Password",
+        txtBtnLogin: "Log in"
+      }
+    };
+
+    function setLanguage(lang) {
+      lang = A11y.migrateLang(lang);
+      langButtons.forEach(b => {
+        const active = b.dataset.lang === lang;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+
+      const t = translations[lang] || translations['nyn'];
+      A11y.htmlLang(lang);
+      document.title = t.pageTitle;
+      document.getElementById('skipLink').textContent = t.skipLink;
+      document.getElementById('themeToggle').setAttribute('aria-label', t.themeToggle);
+      document.getElementById('accToggle').setAttribute('aria-label', t.accTitle);
+      document.getElementById('tableCaption').textContent = t.tableCaption;
+
+      // Login Overlay
+      const loginTitleEl = document.getElementById('loginTitle');
+      const lblAdminPasswordEl = document.getElementById('lblAdminPassword');
+      const txtBtnLoginEl = document.getElementById('txtBtnLogin');
+      if (loginTitleEl) loginTitleEl.textContent = t.loginTitle || "Adgangskontroll";
+      if (lblAdminPasswordEl) lblAdminPasswordEl.textContent = t.lblAdminPassword || "Passord";
+      if (txtBtnLoginEl) txtBtnLoginEl.textContent = t.txtBtnLogin || "Logg inn";
+      
+      // Update DOM texts
+      document.getElementById('lblPageTitle').textContent = t.lblPageTitle;
+      document.getElementById('lblStatRegistrations').textContent = t.lblStatRegistrations;
+      document.getElementById('lblStatAdults').textContent = t.lblStatAdults;
+      document.getElementById('lblStatChildren').textContent = t.lblStatChildren;
+      
+      document.getElementById('searchInput').placeholder = t.searchInputPlaceholder;
+      document.getElementById('optAllTimes').textContent = t.optAllTimes;
+      document.getElementById('txtBtnAdd').textContent = t.txtBtnAdd;
+      document.getElementById('txtBtnExport').textContent = t.txtBtnExport;
+      document.getElementById('txtBtnClear').textContent = t.txtBtnClear;
+      
+      document.getElementById('thName').textContent = t.thName;
+      document.getElementById('thTime').textContent = t.thTime;
+      document.getElementById('thAdults').textContent = t.thAdults;
+      document.getElementById('thChildren').textContent = t.thChildren;
+      document.getElementById('thEmail').textContent = t.thEmail;
+      document.getElementById('thDate').textContent = t.thDate;
+      document.getElementById('thActions').textContent = t.thActions;
+      
+      document.getElementById('txtEmptyState').textContent = t.txtEmptyState;
+      
+      // Modal
+      document.getElementById('modalTitle').textContent = t.modalTitle;
+      document.getElementById('lblModalName').textContent = t.lblModalName;
+      document.getElementById('lblModalAdults').textContent = t.lblModalAdults;
+      document.getElementById('lblModalChildren').textContent = t.lblModalChildren;
+      document.getElementById('lblModalEmail').textContent = t.lblModalEmail;
+      document.getElementById('lblModalTime').textContent = t.lblModalTime;
+      document.getElementById('btnModalCancel').textContent = t.btnModalCancel;
+      document.getElementById('btnModalSave').textContent = t.btnModalSave;
+
+      // Footer
+      document.getElementById('txtFooterBack').firstChild.textContent = t.txtFooterBack + " ";
+      document.getElementById('txtFooterBackLink').textContent = t.txtFooterBackLink;
+
+      // Settings Card
+      document.getElementById('lblSettingsTitle').textContent = t.lblSettingsTitle;
+      document.getElementById('lblSettingsDate').textContent = t.lblSettingsDate;
+      document.getElementById('lblSettingsStartTime').textContent = t.lblSettingsStartTime;
+      document.getElementById('lblSettingsEndTime').textContent = t.lblSettingsEndTime;
+      document.getElementById('txtBtnSaveSettings').textContent = t.txtBtnSaveSettings;
+
+      // Accessibility
+      document.getElementById('lblAccFontSize').textContent = t.accFontSize;
+      document.getElementById('txtSizeNormal').textContent = t.accSizeNormal;
+      document.getElementById('txtSizeLarge').textContent = t.accSizeLarge;
+      document.getElementById('txtSizeXLarge').textContent = t.accSizeXLarge;
+      document.getElementById('lblAccContrast').textContent = t.accContrast;
+      document.getElementById('txtContrastStandard').textContent = t.accContrastStandard;
+      document.getElementById('txtContrastHcDark').textContent = t.accContrastHcDark;
+      document.getElementById('txtContrastHcLight').textContent = t.accContrastHcLight;
+      document.getElementById('lblAccSpacing').textContent = t.accSpacing;
+      document.getElementById('txtSpacingStandard').textContent = t.accSpacingStandard;
+      document.getElementById('txtSpacingIncreased').textContent = t.accSpacingIncreased;
+
+      const currentTheme = document.documentElement.dataset.theme;
+      const sunIcon = document.getElementById('sunIcon');
+      const moonIcon = document.getElementById('moonIcon');
+      if (currentTheme === 'dark') {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+      } else {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+      }
+
+      localStorage.setItem('admin_lang', lang);
+      
+      // Re-render table to translate dynamic elements like buttons and dates
+      renderTable();
+    }
+
+    function setTheme(theme) {
+      document.documentElement.dataset.theme = theme;
+      const sunIcon = document.getElementById('sunIcon');
+      const moonIcon = document.getElementById('moonIcon');
+      if (theme === 'dark') {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+      } else {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+      }
+      localStorage.setItem('theme', theme);
+    }
+
+    function setAccessibilityFontSize(size) {
+      document.documentElement.dataset.fontSize = size;
+      localStorage.setItem('acc_font_size', size);
+      
+      document.querySelectorAll('#accFontSizeOptions button').forEach(btn => {
+        if (btn.dataset.size === size) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    function setAccessibilityContrast(contrast) {
+      document.documentElement.dataset.contrast = contrast;
+      localStorage.setItem('acc_contrast', contrast);
+      
+      document.querySelectorAll('#accContrastOptions button').forEach(btn => {
+        if (btn.dataset.contrast === contrast) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    function setAccessibilitySpacing(spacing) {
+      document.documentElement.dataset.fontSpacing = spacing;
+      localStorage.setItem('acc_spacing', spacing);
+      
+      document.querySelectorAll('#accSpacingOptions button').forEach(btn => {
+        if (btn.dataset.spacing === spacing) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    // Generate Time Slots dynamically based on settings
+    let timeSlots = [];
+    function generateTimeSlots() {
+      timeSlots = [];
+      const settings = JSON.parse(localStorage.getItem('distribution_settings') || '{"date":"2026-06-12","startTime":"14:00","endTime":"17:00"}');
+      const startParts = settings.startTime.split(':').map(Number);
+      const endParts = settings.endTime.split(':').map(Number);
+      const startTime = startParts[0] * 60 + startParts[1];
+      const endTime = endParts[0] * 60 + endParts[1];
+      const interval = 5;
+      for (let i = startTime; i < endTime; i += interval) {
+        const startHour = Math.floor(i / 60);
+        const startMinute = i % 60;
+        const endHour = Math.floor((i + interval) / 60);
+        const endMinute = (i + interval) % 60;
+        const formatTime = (h, m) => `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+        timeSlots.push(`${formatTime(startHour, startMinute)}-${formatTime(endHour, endMinute)}`);
+      }
+    }
+
+    // Load Data
+    function loadData() {
+      registrations = JSON.parse(localStorage.getItem('registrations') || '[]');
+      generateTimeSlots();
+      calculateStats();
+      populateTimeFilters();
+      renderTable();
+    }
+
+    // Calculate Statistics
+    function calculateStats() {
+      const total = registrations.length;
+      let adults = 0;
+      let children = 0;
+      registrations.forEach(r => {
+        adults += parseInt(r.adults || 1);
+        children += parseInt(r.children || 0);
+      });
+
+      document.getElementById('valStatRegistrations').textContent = total;
+      document.getElementById('valStatAdults').textContent = adults;
+      document.getElementById('valStatChildren').textContent = children;
+    }
+
+    // Populate Filters and Modals select
+    function populateTimeFilters() {
+      const selectedFilter = timeFilter.value;
+      timeFilter.innerHTML = '';
+      
+      const currentLang = A11y.migrateLang(localStorage.getItem('admin_lang') || 'nyn');
+      const allText = (translations[currentLang] || translations.nyn).optAllTimes;
+      
+      const defaultOpt = document.createElement('option');
+      defaultOpt.value = '';
+      defaultOpt.id = 'optAllTimes';
+      defaultOpt.textContent = allText;
+      timeFilter.appendChild(defaultOpt);
+
+      timeSlots.forEach(slot => {
+        const opt = document.createElement('option');
+        opt.value = slot;
+        opt.textContent = slot;
+        timeFilter.appendChild(opt);
+      });
+      timeFilter.value = selectedFilter;
+
+      // Modal select
+      modalSelectTime.innerHTML = '';
+      timeSlots.forEach(slot => {
+        const opt = document.createElement('option');
+        opt.value = slot;
+        opt.textContent = slot;
+        modalSelectTime.appendChild(opt);
+      });
+    }
+
+    // Render Table Rows
+    function renderTable() {
+      const searchVal = document.getElementById('searchInput').value.toLowerCase();
+      const filterTime = timeFilter.value;
+      const currentLang = A11y.migrateLang(localStorage.getItem('admin_lang') || 'nyn');
+      const t = translations[currentLang] || translations.nyn;
+
+      tableBody.innerHTML = '';
+
+      const filtered = registrations.filter(r => {
+        const matchSearch = r.name.toLowerCase().includes(searchVal) || r.email.toLowerCase().includes(searchVal);
+        const matchTime = filterTime === '' || r.time === filterTime;
+        return matchSearch && matchTime;
+      });
+
+      // Sort by registered timestamp descending
+      filtered.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+      if (filtered.length === 0) {
+        regTable.style.display = 'none';
+        emptyState.style.display = 'block';
+      } else {
+        regTable.style.display = 'table';
+        emptyState.style.display = 'none';
+
+        filtered.forEach(r => {
+          const tr = document.createElement('tr');
+
+          // Name
+          const tdName = document.createElement('td');
+          tdName.textContent = r.name;
+          tr.appendChild(tdName);
+
+          // Time slot
+          const tdTime = document.createElement('td');
+          tdTime.textContent = r.time;
+          tr.appendChild(tdTime);
+
+          // Adults
+          const tdAdults = document.createElement('td');
+          tdAdults.textContent = r.adults;
+          tr.appendChild(tdAdults);
+
+          // Children
+          const tdChildren = document.createElement('td');
+          tdChildren.textContent = r.children;
+          tr.appendChild(tdChildren);
+
+          // Email
+          const tdEmail = document.createElement('td');
+          tdEmail.textContent = r.email || '-';
+          tr.appendChild(tdEmail);
+
+          // Timestamp
+          const tdDate = document.createElement('td');
+          const date = new Date(r.timestamp);
+          const dateString = date.toLocaleDateString((currentLang === 'nyn' || currentLang === 'bok') ? 'no-NO' : 'en-US', {
+            day: '2-digit',
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+          tdDate.textContent = dateString;
+          tr.appendChild(tdDate);
+
+          // Action buttons
+          const tdActions = document.createElement('td');
+          const btnDel = document.createElement('button');
+          btnDel.className = 'btn-delete';
+          btnDel.textContent = t.btnDelete;
+          btnDel.addEventListener('click', () => deleteRegistration(r.id));
+          tdActions.appendChild(btnDel);
+          tr.appendChild(tdActions);
+
+          tableBody.appendChild(tr);
+        });
+      }
+    }
+
+    // Delete Single Record
+    function deleteRegistration(id) {
+      const currentLang = A11y.migrateLang(localStorage.getItem('admin_lang') || 'nyn');
+      if (confirm((translations[currentLang] || translations.nyn).confirmDelete)) {
+        fetch(`${CONFIG.API_URL}/id/${id}`, {
+          method: 'DELETE'
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('Delete failed');
+          return res.json();
+        })
+        .then(() => {
+          registrations = registrations.filter(r => r.id !== id);
+          localStorage.setItem('registrations', JSON.stringify(registrations));
+          calculateStats();
+          renderTable();
+        })
+        .catch(err => {
+          console.error('Error deleting registration:', err);
+          alert('Error deleting registration. Please try again.');
+        });
+      }
+    }
+
+    // Clear All Records
+    document.getElementById('btnClearDatabase').addEventListener('click', () => {
+      const currentLang = A11y.migrateLang(localStorage.getItem('admin_lang') || 'nyn');
+      const t = translations[currentLang] || translations.nyn;
+      if (confirm(t.confirmClear)) {
+        const clearBtn = document.getElementById('btnClearDatabase');
+        const originalText = clearBtn.textContent;
+        clearBtn.disabled = true;
+        clearBtn.textContent = '...';
+
+        fetch(CONFIG.API_URL)
+          .then(res => res.json())
+          .then(data => {
+            if (Array.isArray(data)) {
+              const regIds = data.map(r => r.id).filter(id => id && id !== '__settings__');
+              if (regIds.length === 0) {
+                return;
+              }
+              const promises = regIds.map(id => 
+                fetch(`${CONFIG.API_URL}/id/${id}`, { method: 'DELETE' })
+              );
+              return Promise.all(promises);
+            }
+          })
+          .then(() => {
+            localStorage.removeItem('registrations');
+            loadData();
+          })
+          .catch(err => {
+            console.error('Error clearing database:', err);
+            alert('Error clearing database. Please try again.');
+          })
+          .finally(() => {
+            clearBtn.disabled = false;
+            clearBtn.textContent = originalText;
+          });
+      }
+    });
+
+    // Modal Operations
+    const addModal = document.getElementById('addModal');
+    const modalForm = document.getElementById('modalForm');
+    const addModalDialog = A11y.bindDialog(addModal, { trigger: document.getElementById('btnAddManually') });
+    
+    document.getElementById('btnAddManually').addEventListener('click', () => {
+      modalForm.reset();
+      addModalDialog.open();
+    });
+
+    document.getElementById('btnModalCancel').addEventListener('click', () => {
+      addModalDialog.close();
+    });
+
+    modalForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('modalInputName').value;
+      const adults = parseInt(document.getElementById('modalInputAdults').value || 1);
+      const children = parseInt(document.getElementById('modalInputChildren').value || 0);
+      const email = document.getElementById('modalInputEmail').value || '';
+      const time = document.getElementById('modalSelectTime').value;
+
+      const registration = {
+        id: 'reg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        name: name,
+        adults: adults,
+        children: children,
+        email: email,
+        time: time,
+        timestamp: new Date().toISOString()
+      };
+
+      const btnSave = document.getElementById('btnModalSave');
+      const originalBtnText = btnSave.textContent;
+      btnSave.disabled = true;
+      btnSave.textContent = '...';
+
+      const sheetRow = {
+        id: registration.id,
+        name: registration.name,
+        adults: registration.adults,
+        children: registration.children,
+        email: registration.email,
+        timeslot: registration.time,
+        'registred at': registration.timestamp
+      };
+
+      fetch(CONFIG.API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          data: [sheetRow]
+        })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
+      })
+      .then(() => {
+        registrations.push(registration);
+        localStorage.setItem('registrations', JSON.stringify(registrations));
+        calculateStats();
+        renderTable();
+        addModalDialog.close();
+      })
+      .catch(err => {
+        console.error('Error saving registration:', err);
+        alert('Error saving registration. Please try again.');
+      })
+      .finally(() => {
+        btnSave.disabled = false;
+        btnSave.textContent = originalBtnText;
+      });
+    });
+
+    // CSV Export
+    document.getElementById('btnExportCSV').addEventListener('click', () => {
+      if (registrations.length === 0) return;
+
+      const currentLang = A11y.migrateLang(localStorage.getItem('admin_lang') || 'nyn');
+      const t = translations[currentLang] || translations.nyn;
+
+      // CSV header
+      const headers = [t.thName, t.thTime, t.thAdults, t.thChildren, t.thEmail, t.thDate];
+      let csvContent = '\uFEFF'; // UTF-8 BOM
+      csvContent += headers.join(';') + '\r\n';
+
+      registrations.forEach(r => {
+        const date = new Date(r.timestamp);
+        const dateString = date.toLocaleDateString((currentLang === 'nyn' || currentLang === 'bok') ? 'no-NO' : 'en-US', {
+          day: '2-digit',
+          month: 'numeric',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+
+        const row = [
+          `"${r.name.replace(/"/g, '""')}"`,
+          `"${r.time}"`,
+          r.adults,
+          r.children,
+          `"${r.email.replace(/"/g, '""')}"`,
+          `"${dateString}"`
+        ];
+        csvContent += row.join(';') + '\r\n';
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `registreringer_matutdeling_${new Date().toISOString().slice(0,10)}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+
+    // Search and Filter Events
+    document.getElementById('searchInput').addEventListener('input', renderTable);
+    timeFilter.addEventListener('change', renderTable);
+
+    // Accessibility Panel Toggle
+    const accToggle = document.getElementById('accToggle');
+    const accPanel = document.getElementById('accPanel');
+    accToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isVisible = accPanel.style.display === 'flex';
+      accPanel.style.display = isVisible ? 'none' : 'flex';
+      A11y.setExpanded(accToggle, !isVisible);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!accPanel.contains(e.target) && e.target !== accToggle && !accToggle.contains(e.target)) {
+        accPanel.style.display = 'none';
+        A11y.setExpanded(accToggle, false);
+      }
+    });
+
+    // Font Size Listeners
+    document.querySelectorAll('#accFontSizeOptions button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setAccessibilityFontSize(btn.dataset.size);
+      });
+    });
+
+    // Contrast Listeners
+    document.querySelectorAll('#accContrastOptions button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setAccessibilityContrast(btn.dataset.contrast);
+      });
+    });
+
+    // Spacing Listeners
+    document.querySelectorAll('#accSpacingOptions button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setAccessibilitySpacing(btn.dataset.spacing);
+      });
+    });
+
+    // Initialize Toggles
+    langButtons.forEach(b => b.addEventListener('click', () => setLanguage(b.dataset.lang)));
+    themeToggle.addEventListener('click', () => {
+      const current = document.documentElement.dataset.theme;
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    // Initialize Settings on Load
+    const storedFontSize = localStorage.getItem('acc_font_size') || 'normal';
+    const storedContrast = localStorage.getItem('acc_contrast') || 'standard';
+    const storedSpacing = localStorage.getItem('acc_spacing') || 'standard';
+    setAccessibilityFontSize(storedFontSize);
+    setAccessibilityContrast(storedContrast);
+    setAccessibilitySpacing(storedSpacing);
+
+    const storedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(storedTheme);
+
+    // Save Settings
+    document.getElementById('settingsForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const date = document.getElementById('settingsDate').value;
+      const startTime = document.getElementById('settingsStartTime').value;
+      const endTime = document.getElementById('settingsEndTime').value;
+
+      // Validate time ordering
+      const startParts = startTime.split(':').map(Number);
+      const endParts = endTime.split(':').map(Number);
+      const startMin = startParts[0] * 60 + startParts[1];
+      const endMin = endParts[0] * 60 + endParts[1];
+
+      const currentLang = A11y.migrateLang(localStorage.getItem('admin_lang') || 'nyn');
+      const t = translations[currentLang] || translations.nyn;
+
+      if (startMin >= endMin) {
+        alert(t.errTimeOrder);
+        return;
+      }
+
+      const settingsBtn = document.getElementById('btnSaveSettings');
+      const originalText = settingsBtn.textContent;
+      settingsBtn.disabled = true;
+      settingsBtn.textContent = '...';
+
+      const settings = { date, startTime, endTime };
+
+      fetch(`${CONFIG.API_URL}/id/__settings__`, {
+        method: 'DELETE'
+      })
+      .then(() => {
+        return fetch(CONFIG.API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            data: [{
+              id: '__settings__',
+              name: date,
+              timeslot: startTime,
+              email: endTime,
+              adults: 0,
+              children: 0,
+              'registred at': new Date().toISOString()
+            }]
+          })
+        });
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to save settings');
+        return res.json();
+      })
+      .then(() => {
+        localStorage.setItem('distribution_settings', JSON.stringify(settings));
+        generateTimeSlots();
+        populateTimeFilters();
+        renderTable();
+
+        const statusEl = document.getElementById('settingsStatus');
+        statusEl.textContent = t.settingsSaved;
+        statusEl.style.opacity = '1';
+        setTimeout(() => {
+          statusEl.style.opacity = '0';
+        }, 3000);
+      })
+      .catch(err => {
+        console.error('Error saving settings:', err);
+        alert('Error saving settings. Please try again.');
+      })
+      .finally(() => {
+        settingsBtn.disabled = false;
+        settingsBtn.textContent = originalText;
+      });
+    });
+
+    // Load Settings
+    function loadSettings() {
+      const settings = JSON.parse(localStorage.getItem('distribution_settings') || '{"date":"2026-06-12","startTime":"14:00","endTime":"17:00"}');
+      document.getElementById('settingsDate').value = settings.date;
+      document.getElementById('settingsStartTime').value = settings.startTime;
+      document.getElementById('settingsEndTime').value = settings.endTime;
+    }
+
+    const storedLang = A11y.migrateLang(localStorage.getItem('admin_lang') || 'nyn');
+    setLanguage(storedLang);
+
+    loadSettings();
+    loadData();
+
+    // Fetch latest from server
+    fetch(CONFIG.API_URL)
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          const settingsRow = data.find(r => r.id === '__settings__');
+          if (settingsRow) {
+            localStorage.setItem('distribution_settings', JSON.stringify({
+              date: settingsRow.name,
+              startTime: settingsRow.timeslot,
+              endTime: settingsRow.email
+            }));
+          }
+          const regs = data
+            .filter(r => r.id && r.id !== '__settings__')
+            .map(r => ({
+              id: r.id,
+              name: r.name,
+              adults: parseInt(r.adults || 1, 10),
+              children: parseInt(r.children || 0, 10),
+              email: r.email || '',
+              time: r.timeslot,
+              timestamp: r['registred at'] || new Date().toISOString()
+            }));
+          localStorage.setItem('registrations', JSON.stringify(regs));
+          
+          loadSettings();
+          loadData();
+        }
+      })
+      .catch(err => console.error('Error fetching database:', err));
+
+    // Password authentication
+    async function sha256(message) {
+      const msgBuffer = new TextEncoder().encode(message);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    if (sessionStorage.getItem('admin_auth') === 'true') {
+      const overlay = document.getElementById('loginOverlay');
+      if (overlay) overlay.style.display = 'none';
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const pwd = document.getElementById('adminPassword').value;
+      const hash = await sha256(pwd);
+      
+      // Password hash configured in config.js
+      if (hash === CONFIG.ADMIN_PASSWORD_HASH) {
+        sessionStorage.setItem('admin_auth', 'true');
+        const overlay = document.getElementById('loginOverlay');
+        if (overlay) overlay.style.display = 'none';
+      } else {
+        const currentLang = A11y.migrateLang(localStorage.getItem('admin_lang') || 'nyn');
+        const err = { nyn: "Feil passord!", bok: "Feil passord!", eng: "Invalid password!" };
+        document.getElementById('loginError').textContent = err[currentLang] || err.nyn;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+/* WCAG 2.2 AA + Designsystemet-inspired tokens (Digdir) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --ds-focus: #0062ba;
+  --ds-focus-width: 3px;
+  --ds-focus-offset: 2px;
+  --ds-primary: #0062ba;
+  --ds-primary-hover: #004f99;
+  --ds-text-muted-safe: #5a6b7d;
+}
+
+[data-theme="dark"] {
+  --ds-text-muted-safe: #a8b8c8;
+}
+
+/* Inter — official Designsystemet typeface */
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Skip link — WCAG 2.4.1 Bypass Blocks */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 10000;
+  padding: 0.75rem 125rem;
+  background: var(--ds-primary);
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: top 0.2s ease;
+}
+.skip-link:focus-visible {
+  top: 0;
+  outline: none;
+  box-shadow: 0 0 0 var(--ds-focus-width) var(--ds-focus);
+}
+
+/* Accessible focus rings — WCAG 2.4.11 Focus Appearance */
+:focus-visible {
+  outline: var(--ds-focus-width) solid var(--ds-focus);
+  outline-offset: var(--ds-focus-offset);
+}
+
+html[data-contrast="hc-dark"] :focus-visible {
+  outline-color: #ffff00;
+}
+html[data-contrast="hc-light"] :focus-visible {
+  outline-color: #0000ff;
+}
+
+/* Improved muted text contrast — WCAG 1.4.3 (4.5:1) */
+[data-theme="light"] {
+  --text-muted: var(--ds-text-muted-safe);
+}
+
+/* Live region for screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.live-region {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Form status messages */
+.form-status {
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  margin-bottom: 1.25rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+}

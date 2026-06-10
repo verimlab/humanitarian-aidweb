@@ -1,0 +1,3098 @@
+<!DOCTYPE html>
+<html lang="nn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Humanitær hjelp</title>
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="stylesheet" href="assets/css/wcag.css">
+  <script src="https://kit.fontawesome.com/debe257320.js" crossorigin="anonymous"></script>
+  <script src="config.js"></script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0f1115;
+      --card-bg: #161a22;
+      --text: #e1e7ef;
+      --text-muted: #94a3b8;
+      --accent: #0062ba;
+      --accent-hover: #004f99;
+      --input-border: #1e293b;
+      --input-focus: rgba(56, 189, 248, 0.15);
+      --shadow: rgba(0, 0, 0, 0.25);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --accent: #0062ba;
+      --accent-hover: #004f99;
+      --input-border: #e2e8f0;
+      --input-focus: rgba(2, 132, 199, 0.1);
+      --shadow: rgba(15, 23, 42, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    a:hover {
+      color: var(--accent-hover);
+      text-decoration: underline;
+    }
+
+    header {
+      background-color: var(--card-bg);
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: padding 0.3s ease;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .site-logo {
+      height: 30px;
+      width: auto;
+      object-fit: contain;
+      transition: height 0.3s ease;
+    }
+
+    .site-title-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .site-title-main {
+      font-size: 1.0rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      line-height: 1.1;
+      transition: font-size 0.3s ease;
+    }
+
+    .site-title-sub {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+      color: var(--text-muted);
+      transition: font-size 0.3s ease;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      position: relative;
+    }
+
+    /* Language Dropdown Container */
+    .lang-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    /* Dropdown Toggle Button */
+    .lang-dropdown-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.625rem;
+      border: 1px solid var(--input-border);
+      background-color: var(--card-bg);
+      color: var(--text);
+      box-shadow: 0 1px 3px var(--shadow);
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      min-height: 40px;
+    }
+
+    .lang-dropdown-btn:hover {
+      background-color: var(--bg);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--input-focus);
+    }
+
+    .lang-dropdown-btn i.fa-globe {
+      font-size: 1rem;
+      color: var(--accent);
+    }
+
+    .lang-dropdown-btn .dropdown-arrow {
+      font-size: 0.75rem;
+      transition: transform 0.2s ease;
+      color: var(--text-muted);
+    }
+
+    .lang-dropdown.open .dropdown-arrow {
+      transform: rotate(180deg);
+    }
+
+    /* Dropdown Menu */
+    .lang-dropdown-menu {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px) scale(0.95);
+      position: absolute;
+      top: calc(100% + 0.5rem);
+      right: 0;
+      background-color: var(--card-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px -5px var(--shadow), 0 8px 10px -6px var(--shadow);
+      z-index: 1010;
+      min-width: 140px;
+      padding: 0.375rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        visibility 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .lang-dropdown.open .lang-dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Menu Items */
+    .lang-dropdown-menu button {
+      width: 100%;
+      text-align: left;
+      padding: 0.625rem 0.875rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      display: block;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+
+    .lang-dropdown-menu button:hover {
+      background-color: var(--bg);
+      color: var(--text);
+    }
+
+    .lang-dropdown-menu button.active {
+      background-color: var(--input-focus);
+      color: var(--accent);
+    }
+
+    button {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    #themeToggle {
+      border: 1px solid var(--input-border);
+      background-color: var(--card-bg);
+      color: var(--text);
+      box-shadow: 0 1px 2px var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      min-width: 40px;
+      border-radius: 10px;
+    }
+
+    #themeToggle svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      transition: all 0.3s ease;
+    }
+
+    #themeToggle:hover {
+      background-color: var(--bg);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* High Contrast Dark */
+    html[data-contrast="hc-dark"] {
+      color-scheme: dark;
+      --bg: #000000;
+      --card-bg: #000000;
+      --text: #ffffff;
+      --text-muted: #ffff00;
+      --accent: #ffff00;
+      --accent-hover: #ffff00;
+      --input-border: #ffffff;
+      --input-focus: rgba(255, 255, 0, 0.4);
+      --shadow: transparent;
+    }
+
+    html[data-contrast="hc-dark"] * {
+      outline-color: #ffff00 !important;
+    }
+
+    html[data-contrast="hc-dark"] a {
+      text-decoration: underline;
+    }
+
+    /* High Contrast Light */
+    html[data-contrast="hc-light"] {
+      color-scheme: light;
+      --bg: #ffffff;
+      --card-bg: #ffffff;
+      --text: #000000;
+      --text-muted: #000000;
+      --accent: #0000ff;
+      --accent-hover: #0000ff;
+      --input-border: #000000;
+      --input-focus: rgba(0, 0, 255, 0.3);
+      --shadow: transparent;
+    }
+
+    html[data-contrast="hc-light"] * {
+      outline-color: #0000ff !important;
+    }
+
+    html[data-contrast="hc-light"] a {
+      text-decoration: underline;
+    }
+
+    /* Font sizing rules scaled at root level */
+    html[data-font-size="normal"] {
+      font-size: 16px;
+    }
+
+    html[data-font-size="large"] {
+      font-size: 20px;
+    }
+
+    html[data-font-size="xlarge"] {
+      font-size: 24px;
+    }
+
+    /* Enhanced spacing for readability */
+    html[data-font-spacing="increased"] {
+      letter-spacing: 0.08em;
+      word-spacing: 0.15em;
+    }
+
+    html[data-font-spacing="increased"] p,
+    html[data-font-spacing="increased"] span,
+    html[data-font-spacing="increased"] li,
+    html[data-font-spacing="increased"] label,
+    html[data-font-spacing="increased"] input,
+    html[data-font-spacing="increased"] button,
+    html[data-font-spacing="increased"] select {
+      line-height: 1.8 !important;
+    }
+
+    /* Accessibility Button styling */
+    #accToggle {
+      border: 1px solid var(--input-border);
+      background-color: transparent;
+      color: var(--text);
+      box-shadow: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      min-width: 40px;
+      border-radius: 10px;
+      font-size: 1.35rem;
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+
+    #accToggle i,
+    #accToggle svg {
+      font-size: 1.85rem !important;
+      width: 1.85rem !important;
+      height: 1.85rem !important;
+      transition: color 0.2s ease;
+    }
+
+    #accToggle:hover {
+      background-color: transparent;
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Accessibility Dropdown Panel */
+    .accessibility-panel {
+      position: absolute;
+      top: calc(100% + 0.5rem);
+      right: 0;
+      background-color: var(--card-bg);
+      border: 2px solid var(--input-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      width: 320px;
+      box-shadow: 0 10px 25px var(--shadow);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      text-align: left;
+    }
+
+    /* Modal Styling */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 11000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      animation: modalFadeIn 0.2s ease-out;
+    }
+
+    .modal-content--privacy,
+    .modal-content--time,
+    .modal-content--success {
+      background-color: var(--card-bg);
+      border: 1px solid var(--input-border);
+      padding: 2rem;
+      width: 100%;
+      max-height: 85vh;
+      border-radius: 16px;
+      box-shadow: 0 20px 25px -5px var(--shadow), 0 8px 10px -6px var(--shadow);
+      animation: modalScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .modal-content--privacy {
+      max-width: 650px;
+    }
+
+    .modal-content--time {
+      max-width: 500px;
+    }
+
+    .modal-content--success {
+      max-width: 450px;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--input-border);
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .btn-close-modal {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.25rem;
+      padding: 0.25rem;
+      border-radius: 8px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+    }
+
+    .btn-close-modal:hover {
+      background-color: var(--bg);
+      color: var(--text);
+    }
+
+    .modal-body {
+      overflow-y: auto;
+      flex: 1;
+      padding-right: 0.5rem;
+    }
+
+    .modal-body h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-top: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .modal-body p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .modal-body ul {
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+      color: var(--text-muted);
+    }
+
+    .modal-body li {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 0.35rem;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes modalScaleUp {
+      from {
+        transform: scale(0.95);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .accessibility-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .accessibility-section h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+
+    .accessibility-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .accessibility-options button {
+      width: 100%;
+      text-align: left;
+      padding: 0.6rem 0.8rem;
+      background-color: var(--bg);
+      border: 1px solid var(--input-border);
+      color: var(--text);
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .accessibility-options button:hover {
+      border-color: var(--accent);
+      background-color: var(--input-focus);
+    }
+
+    .accessibility-options button.active {
+      background-color: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+    }
+
+    [data-theme="light"] .accessibility-options button.active,
+    [data-contrast="hc-light"] .accessibility-options button.active {
+      color: #ffffff;
+    }
+
+    [data-contrast="hc-dark"] .accessibility-options button.active {
+      color: #000000;
+    }
+
+    @media (max-width: 480px) {
+      .accessibility-panel {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        border-radius: 16px 16px 0 0;
+        border-bottom: none;
+        box-shadow: 0 -10px 25px var(--shadow);
+      }
+    }
+
+    main {
+      padding: 3rem 1.5rem;
+      max-width: 680px;
+      margin: 0 auto;
+      flex: 1;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 2rem 0 0.75rem;
+    }
+
+    .info-block p {
+      margin-bottom: 1rem;
+      font-size: 1.05rem;
+      color: var(--text);
+    }
+
+    .info-block p strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .instructions {
+      color: var(--text-muted) !important;
+      font-size: 1rem !important;
+      margin-bottom: 0.75rem !important;
+    }
+
+    .info-block p small {
+      color: var(--text-muted);
+      font-style: italic;
+      font-size: 0.85rem;
+      opacity: 0.85;
+    }
+
+    .lang-section {
+      display: none;
+    }
+
+    .lang-section.active {
+      display: block;
+    }
+
+    /* Современные стили формы */
+    .form-container {
+      margin-top: 3rem;
+      padding: 2.5rem;
+      border: 1px solid var(--input-border);
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px var(--shadow), 0 8px 10px -6px var(--shadow);
+    }
+
+    .form-container h2 {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background-color: var(--bg);
+      border: 1px solid var(--input-border);
+      color: var(--text);
+      font-size: 1rem;
+      font-family: inherit;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--accent);
+      background-color: var(--card-bg);
+      box-shadow: 0 0 0 4px var(--input-focus);
+    }
+
+    .form-group--checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group--checkbox input[type="checkbox"] {
+      width: 1.25rem;
+      height: 1.25rem;
+      margin-top: 0.2rem;
+      cursor: pointer;
+      accent-color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .form-group--checkbox label {
+      display: inline;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+      line-height: 1.4;
+    }
+
+    .form-group--checkbox label a {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .form-group--checkbox label a:hover {
+      color: var(--accent-hover);
+    }
+
+    .row {
+      display: flex;
+      gap: 1.25rem;
+    }
+
+    .row .form-group {
+      flex: 1;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 1rem;
+      background-color: var(--accent);
+      color: #ffffff;
+      border: none;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+      transition: all 0.2s ease;
+    }
+
+    [data-theme="light"] .btn-submit {
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
+    }
+
+    .btn-submit:hover {
+      background-color: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:active {
+      transform: translateY(1px);
+    }
+
+    .location-image {
+      width: 100%;
+      max-width: 700px;
+      border-radius: 12px;
+      margin: 2rem auto 1.5rem;
+      box-shadow: 0 4px 15px var(--shadow);
+      display: block;
+      border: 1px solid var(--input-border);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .location-image:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px var(--shadow);
+    }
+
+    .location-address {
+      margin: 0 auto 1.5rem;
+      max-width: 700px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-align: left;
+      font-style: italic;
+    }
+
+    .location-address strong {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* === Location Map === */
+    .location-map {
+      margin: 0 auto 2rem;
+      max-width: 700px;
+      width: 100%;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--input-border);
+      box-shadow: 0 4px 16px var(--shadow);
+      line-height: 0;
+    }
+
+    .location-map iframe {
+      width: 100%;
+      height: 220px;
+      display: block;
+      border: none;
+      filter: var(--map-filter, none);
+    }
+
+
+    /* === Registration Summary Block === */
+    .reg-summary {
+      padding: 0;
+      border: none;
+      background-color: transparent;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .reg-summary__icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+      color: #ffffff;
+    }
+
+    .reg-summary__icon i,
+    .reg-summary__icon svg {
+      font-size: 1.75rem;
+      color: #ffffff !important;
+    }
+
+    .reg-summary__title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+
+    .reg-summary__details {
+      background: var(--bg);
+      border: 1px solid var(--input-border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .reg-summary__row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--input-border);
+      font-size: 0.95rem;
+      gap: 1rem;
+    }
+
+    .reg-summary__row:first-child {
+      padding-top: 0;
+    }
+
+    .reg-summary__row:last-child {
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .reg-summary__row-label {
+      color: var(--text-muted);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .reg-summary__row-value {
+      font-weight: 700;
+      color: var(--text);
+      text-align: right;
+    }
+
+    .btn-edit-reg {
+      display: block;
+      width: 100%;
+      padding: 0.85rem 1.5rem;
+      border: 2px solid var(--accent);
+      border-radius: 10px;
+      background: transparent;
+      color: var(--accent);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .btn-edit-reg:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Disabled time-picker button when all slots full */
+    .btn-toggle-time:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .no-slots-note {
+      margin-top: 0.4rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    footer {
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      border-top: 1px solid var(--input-border);
+      background-color: var(--card-bg);
+      margin-top: 4rem;
+    }
+
+    .footer-content {
+      max-width: 680px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .footer-section h3 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-section p {
+      font-size: 0.875rem;
+      line-height: 1.6;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .footer-links a,
+    .footer-links span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .footer-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+
+    .btn-toggle-time {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background-color: var(--bg);
+      border: 1px solid var(--input-border);
+      color: var(--text);
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn-toggle-time.selected {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--input-focus);
+    }
+
+    .btn-toggle-time.selected i {
+      color: var(--accent) !important;
+    }
+
+    .time-selection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      /* Adjust column width as needed */
+      gap: 0.5rem;
+    }
+
+    .time-selection-grid button {
+      padding: 0.75rem 0.5rem;
+      background-color: var(--bg);
+      border: 1px solid var(--input-border);
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 500;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .time-selection-grid button:hover:not(.active) {
+      background-color: var(--input-focus);
+      /* Use a subtle hover effect */
+      border-color: var(--accent);
+    }
+
+    .time-selection-grid button.active {
+      background-color: var(--accent);
+      color: var(--bg);
+      /* Text color for active button */
+      border-color: var(--accent);
+      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
+    }
+
+    [data-theme="light"] .time-selection-grid button.active {
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
+    }
+
+    .footer-credit {
+      text-align: right;
+      font-size: 0.65rem;
+      opacity: 0.4;
+      margin-top: 2rem;
+    }
+
+    .contact-block {
+      max-width: 680px;
+      margin: 3rem auto 0;
+      padding: 2rem;
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .contact-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin: 0 auto 1.5rem;
+      overflow: hidden;
+      border: 3px solid var(--accent);
+      object-fit: cover;
+    }
+
+    .contact-title {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .contact-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+    }
+
+    .contact-info {
+      margin-bottom: 0.75rem;
+    }
+
+    .contact-info a {
+      color: var(--accent);
+    }
+
+    /* Responsive overrides for smaller screens (base is mobile-first, but we add detail for tablet/mobile spacing) */
+    @media (max-width: 768px) {
+      main {
+        padding: 2rem 1rem;
+      }
+
+      .form-container {
+        padding: 1.5rem;
+        border-radius: 12px;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+      }
+    }
+
+    /* Desktop layout overrides */
+    @media (min-width: 1024px) {
+      header {
+        padding: 1rem 2rem;
+      }
+
+      .site-logo {
+        height: 36px;
+      }
+
+      .site-title-main {
+        font-size: 1.1rem;
+      }
+
+      .site-title-sub {
+        font-size: 0.8rem;
+      }
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      top: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10000;
+      background-color: #dc2626;
+      color: #ffffff;
+      padding: 0.875rem 1.25rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+      max-width: calc(100vw - 2rem);
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    @media (min-width: 768px) {
+      .toast {
+        left: auto;
+        right: 1rem;
+        transform: none;
+      }
+    }
+
+    /* Intermediate desktop screen optimizations */
+    @media (min-width: 1024px) and (max-width: 1200px) {
+      .site-title-main {
+        font-size: 0.95rem;
+      }
+
+      .site-title-sub {
+        font-size: 0.75rem;
+      }
+
+      .controls {
+        gap: 0.5rem;
+      }
+
+      .lang-dropdown-btn {
+        padding: 0.5rem 0.75rem;
+      }
+    }
+
+    /* Mobile/tablet optimizations */
+    @media (max-width: 768px) {
+      .location-image {
+        margin: 1.25rem auto 1rem;
+      }
+
+      .location-map {
+        margin: 0 auto 1.25rem;
+      }
+
+      .contact-block {
+        margin-top: 2rem;
+        padding: 1.25rem;
+      }
+
+      .contact-avatar {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 1rem;
+      }
+
+      .contact-name {
+        font-size: 1.15rem;
+      }
+
+      footer {
+        padding: 1.5rem 1rem;
+        margin-top: 2.5rem;
+      }
+    }
+
+    /* Mobile form and header stack */
+    @media (max-width: 576px) {
+      .row {
+        flex-direction: column;
+        gap: 0;
+      }
+
+      header {
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        align-items: center;
+        text-align: center;
+      }
+
+      .header-brand {
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .controls {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* Ultra-small mobile screens optimization */
+    @media (max-width: 400px) {
+      header {
+        padding: 0.5rem 0.75rem;
+      }
+
+      .header-brand {
+        gap: 0.35rem;
+      }
+
+      .site-logo {
+        height: 24px;
+      }
+
+      .site-title-main {
+        font-size: 0.8rem;
+      }
+
+      .site-title-sub {
+        font-size: 0.65rem;
+      }
+
+      #accToggle {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+      }
+
+      #accToggle i,
+      #accToggle svg {
+        font-size: 1.5rem !important;
+        width: 1.5rem !important;
+        height: 1.5rem !important;
+      }
+
+      .form-container {
+        padding: 1.25rem 1rem;
+      }
+
+      .modal-content--privacy,
+      .modal-content--time,
+      .modal-content--success {
+        padding: 1.25rem;
+      }
+
+      .modal-header h2 {
+        font-size: 1.25rem;
+      }
+    }
+  </style>
+</head>
+
+<body data-theme="dark">
+  <a href="#main-content" class="skip-link" id="skipLink">Hopp til hovudinnhald</a>
+  <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
+
+  <header>
+    <div class="header-brand">
+      <img src="logo.png" alt="Nord-Fron logo" class="site-logo">
+      <div class="site-title-container">
+        <p class="site-title-main">Kyrkja i Nord-Fron</p>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="lang-dropdown" id="langDropdown">
+        <button type="button" id="langDropdownToggle" class="lang-dropdown-btn" aria-haspopup="true"
+          aria-expanded="false" aria-label="Velg språk">
+          <i class="fa-solid fa-globe"></i>
+          <span id="currentLangLabel">NYN</span>
+          <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+        </button>
+        <div class="lang-dropdown-menu" id="langDropdownMenu" role="menu" aria-labelledby="langDropdownToggle">
+          <button type="button" data-lang="nyn" role="menuitem" lang="nn" class="active">NYN</button>
+          <button type="button" data-lang="bok" role="menuitem" lang="nb">BOK</button>
+          <button type="button" data-lang="eng" role="menuitem" lang="en">ENG</button>
+          <button type="button" data-lang="ukr" role="menuitem" lang="uk">УКР</button>
+          <button type="button" data-lang="rus" role="menuitem" lang="ru">РУС</button>
+        </div>
+      </div>
+      <button type="button" id="themeToggle" aria-label="Bytt fargetema">
+        <svg viewBox="0 0 24 24" id="sunIcon">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg viewBox="0 0 24 24" id="moonIcon" style="display: none;">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      <button type="button" id="accToggle" aria-label="Tilgjengelegheit" aria-expanded="false" aria-controls="accPanel">
+        <i class="fa-solid fa-universal-access"></i>
+      </button>
+      <div id="accPanel" class="accessibility-panel" style="display: none;" role="region" aria-labelledby="accToggle">
+        <div class="accessibility-section">
+          <h4 id="lblAccFontSize">Font Size</h4>
+          <div class="accessibility-options" id="accFontSizeOptions">
+            <button type="button" data-size="normal" class="active"><span id="txtSizeNormal">Normal</span></button>
+            <button type="button" data-size="large"><span id="txtSizeLarge">Large (+25%)</span></button>
+            <button type="button" data-size="xlarge"><span id="txtSizeXLarge">Extra Large (+50%)</span></button>
+          </div>
+        </div>
+        <div class="accessibility-section">
+          <h4 id="lblAccContrast">Contrast</h4>
+          <div class="accessibility-options" id="accContrastOptions">
+            <button type="button" data-contrast="standard" class="active"><span
+                id="txtContrastStandard">Standard</span></button>
+            <button type="button" data-contrast="hc-dark"><span id="txtContrastHcDark">High Contrast
+                (Dark)</span></button>
+            <button type="button" data-contrast="hc-light"><span id="txtContrastHcLight">High Contrast
+                (Light)</span></button>
+          </div>
+        </div>
+        <div class="accessibility-section">
+          <h4 id="lblAccSpacing">Text Spacing</h4>
+          <div class="accessibility-options" id="accSpacingOptions">
+            <button type="button" data-spacing="standard" class="active"><span
+                id="txtSpacingStandard">Standard</span></button>
+            <button type="button" data-spacing="increased"><span id="txtSpacingIncreased">Increased</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <div class="info-block">
+      <section class="lang-section active" data-lang="nyn" lang="nn">
+        <h1>Registrering for humanitær hjelp</h1>
+        <p id="infoUtdelingNyn">Matutdeling vil finne sted fredag 12. juni 2026 fra 14:00 til 17:00.</p>
+        <img src="image.jpeg" alt="Stad for matutdeling ved Nordre Byre 17" class="location-image">
+        <p class="location-address"><strong>Adresse:</strong> Nordre Byre 17</p>
+        <div class="location-map">
+          <iframe src="https://maps.google.com/maps?q=Nordre+Byre+17,+2640+Vinstra,+Norway&hl=nn&z=17&output=embed"
+            title="Nordre Byre 17, Vinstra" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen></iframe>
+        </div>
+        <p>For å delta på utdelingen må du fylle ut skjemaet nedenfor, eller ringe kirkekontoret på telefon <strong><a
+              href="tel:+4761216272">+47 61 21 62 72</a></strong>. Telefonen er åpen fra 9:00 til 13:00 på
+          hverdager.<br><small><em>Merk: Telefonsamtaler vert berre tekne på norsk eller engelsk.</em></small></p>
+        <p>Registreringsfristen er 24 timer før utdelingen.</p>
+        <h2>Registreringsinstruksjon:</h2>
+        <p class="instructions">Ved registrering oppgir du ditt navn, som du må oppgi når du henter maten.</p>
+        <p class="instructions">Oppgi antall voksne du forsørger.</p>
+        <p class="instructions">Oppgi antall barn du forsørger.</p>
+        <p class="instructions">Oppgi din e-postadresse, så mottar du bekreftelse på registreringen (Valgfritt).</p>
+        <p class="instructions">Velg en praktisk tid.</p>
+      </section>
+
+      <section class="lang-section" data-lang="bok" lang="nb">
+        <h1>Registrering for humanitær hjelp</h1>
+        <p id="infoUtdelingBok">Matutdeling finner sted fredag 12. juni 2026 fra kl. 14:00 til 17:00.</p>
+        <img src="image.jpeg" alt="Sted for matutdeling ved Nordre Byre 17" class="location-image">
+        <p class="location-address"><strong>Adresse:</strong> Nordre Byre 17</p>
+        <div class="location-map">
+          <iframe src="https://maps.google.com/maps?q=Nordre+Byre+17,+2640+Vinstra,+Norway&hl=nb&z=17&output=embed"
+            title="Nordre Byre 17, Vinstra" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen></iframe>
+        </div>
+        <p>For å delta på utdelingen må du fylle ut skjemaet nedenfor, eller ringe kirkekontoret på telefon <strong><a
+              href="tel:+4761216272">+47 61 21 62 72</a></strong>. Telefonen er åpen fra kl. 9:00 til 13:00 på
+          hverdager.<br><small><em>Merk: Telefonsamtaler tas kun på norsk eller engelsk.</em></small></p>
+        <p>Registreringsfristen er 24 timer før utdelingen.</p>
+        <h2>Registreringsinstruksjon:</h2>
+        <p class="instructions">Ved registrering oppgir du ditt navn, som du må oppgi når du henter maten.</p>
+        <p class="instructions">Oppgi antall voksne du forsørger.</p>
+        <p class="instructions">Oppgi antall barn du forsørger.</p>
+        <p class="instructions">Oppgi din e-postadresse, så mottar du bekreftelse på registreringen (Valgfritt).</p>
+        <p class="instructions">Velg et praktisk tidspunkt.</p>
+      </section>
+
+      <section class="lang-section" data-lang="eng" lang="en">
+        <h1>Registration for Humanitarian Aid</h1>
+        <p id="infoUtdelingEng">Food distribution will take place on Friday 12 June 2026 from 14:00 to 17:00.</p>
+        <img src="image.jpeg" alt="Food distribution location" class="location-image">
+        <p class="location-address"><strong>Address:</strong> Nordre Byre 17</p>
+        <div class="location-map">
+          <iframe src="https://maps.google.com/maps?q=Nordre+Byre+17,+2640+Vinstra,+Norway&hl=en&z=17&output=embed"
+            title="Nordre Byre 17, Vinstra" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen></iframe>
+        </div>
+        <p>To participate in the distribution you must fill out the form below, or call the church office at <strong><a
+              href="tel:+4761216272">+47 61 21 62 72</a></strong>. Phone is open from 9:00 to 13:00 on
+          weekdays.<br><small><em>Please note: Phone calls are accepted in Norwegian or English only.</em></small></p>
+        <p>The registration deadline is 24 hours before the distribution.</p>
+        <h2>Registration Instructions:</h2>
+        <p class="instructions">During registration, provide your name, which you will need to state when receiving
+          food.</p>
+        <p class="instructions">Specify the number of adults you provide food for.</p>
+        <p class="instructions">Specify the number of children you provide food for.</p>
+        <p class="instructions">Provide your email address and you will receive a registration confirmation (Optional).
+        </p>
+        <p class="instructions">Choose a convenient time.</p>
+      </section>
+
+      <section class="lang-section" data-lang="ukr" lang="uk">
+        <h1>Реєстрація на гуманітарну допомогу</h1>
+        <p id="infoUtdelingUkr">Роздача продуктів харчування відбудеться в пʼятницю 12 червня 2026 року з 14:00 до 17:00.</p>
+        <img src="image.jpeg" alt="Місце роздачі продуктів" class="location-image">
+        <p class="location-address"><strong>Адреса:</strong> Nordre Byre 17</p>
+        <div class="location-map">
+          <iframe src="https://maps.google.com/maps?q=Nordre+Byre+17,+2640+Vinstra,+Norway&hl=uk&z=17&output=embed"
+            title="Nordre Byre 17, Vinstra" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen></iframe>
+        </div>
+        <p>Щоб прийти на роздачу, необхідно заповнити форму нижче, або зателефонувати в офіс церкви за номером
+          <strong><a href="tel:+4761216272">+47 61 21 62 72</a></strong>. Дзвінки приймаються з 9:00 до 13:00 у
+          будні.<br><small><em>Зверніть увагу: дзвінки приймаються лише норвезькою або англійською мовою.</em></small>
+        </p>
+        <p>Крайній термін реєстрації — за 24 години до початку роздачі.</p>
+        <h2>Інструкція з реєстрації:</h2>
+        <p class="instructions">Під час реєстрації вкажіть своє імʼя, яке потрібно буде назвати при отриманні продуктів.
+        </p>
+        <p class="instructions">Вкажіть кількість дорослих, яких ви забезпечуєте харчуванням.</p>
+        <p class="instructions">Вкажіть кількість дітей, яких ви забезпечуєте харчуванням.</p>
+        <p class="instructions">Вкажіть свою електронну пошту, на неї прийде підтвердження реєстрації (Необов'язково).
+        </p>
+        <p class="instructions">Оберіть зручний час.</p>
+      </section>
+
+      <section class="lang-section" data-lang="rus" lang="ru">
+        <h1>Регистрация на гуманитарную помощь</h1>
+        <p id="infoUtdelingRus">Раздача продуктов питания будет проходить в пятницу 12 июня 2026 года с 14:00 до 17:00.</p>
+        <img src="image.jpeg" alt="Место раздачи продуктов" class="location-image">
+        <p class="location-address"><strong>Адрес:</strong> Nordre Byre 17</p>
+        <div class="location-map">
+          <iframe src="https://maps.google.com/maps?q=Nordre+Byre+17,+2640+Vinstra,+Norway&hl=ru&z=17&output=embed"
+            title="Nordre Byre 17, Vinstra" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen></iframe>
+        </div>
+        <p>Чтобы прийти на раздачу необходимо заполнить форму ниже, либо позвонить в офис церкви по телефону <strong><a
+              href="tel:+4761216272">+47 61 21 62 72</a></strong>. Звонки принимаются с 9:00 до 13:00 по
+          будням.<br><small><em>Обратите внимание: звонки принимаются только на норвежском или английском
+              языке.</em></small></p>
+        <p>Крайний срок регистрации — за 24 часа до начала раздачи.</p>
+        <h2>Инструкция по регистрации:</h2>
+        <p class="instructions">При регистрации укажите своё имя, его нужно будет назвать при получении продуктов.</p>
+        <p class="instructions">Укажите количество взрослых, которых вы обеспечиваете питанием.</p>
+        <p class="instructions">Укажите количество детей, которых вы обеспечиваете питанием.</p>
+        <p class="instructions">Выберете удобное время.</p>
+      </section>
+    </div>
+
+    <div class="form-container">
+      <h2 id="formTitle">Registrering</h2>
+      <div id="formStatus" class="form-status" role="alert" hidden></div>
+      <form id="regForm" novalidate>
+        <div class="form-group">
+          <label id="lblLabelName" for="inputName">Navn</label>
+          <input type="text" id="inputName" required placeholder="John Doe">
+        </div>
+
+        <div class="row">
+          <div class="form-group">
+            <label id="lblLabelAdults" for="inputAdults">Antall voksne du forsørger</label>
+            <input type="number" id="inputAdults" min="1" max="7" placeholder="1" required>
+          </div>
+
+          <div class="form-group">
+            <label id="lblLabelChildren" for="inputChildren">Antall barn du forsørger</label>
+            <input type="number" id="inputChildren" min="0" max="5" placeholder="0">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label id="lblLabelEmail" for="inputEmail">E-postadresse (Valgfritt)</label>
+          <input type="email" id="inputEmail" placeholder="example@mail.com">
+        </div>
+
+        <div class="form-group">
+          <label id="lblLabelTime">Velg tidspunkt</label>
+          <button type="button" id="btnOpenTimeModal" class="btn-toggle-time">
+            <span id="txtToggleTime">Vis tilgjengelege tider</span>
+            <i class="fa-regular fa-clock" style="color: var(--text-muted);"></i>
+          </button>
+          <input type="hidden" id="inputTime" name="time" value="">
+          <p class="no-slots-note" id="noSlotsNote" hidden></p>
+        </div>
+
+        <div class="form-group form-group--checkbox">
+          <input type="checkbox" id="inputConsent" required>
+          <label id="lblLabelConsent" for="inputConsent">Eg har lese og samtykkjer til <a href="#"
+              target="_blank">behandling av personopplysningar</a></label>
+        </div>
+
+        <button type="submit" class="btn-submit" id="btnSubmit">Send inn registrering</button>
+      </form>
+
+      <!-- Registration Summary (shown after successful registration) -->
+      <div id="regSummary" class="reg-summary" hidden>
+        <div class="reg-summary__icon">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h2 class="reg-summary__title" id="regSummaryTitle">Registrering motteke!</h2>
+        <div class="reg-summary__details" id="regSummaryDetails"></div>
+        
+
+
+        <button type="button" class="btn-edit-reg" id="btnEditReg">Endre informasjon</button>
+      </div>
+    </div>
+
+    <div class="contact-block">
+      <img src="avatar.webp" alt="Per Øyvind Fredin, diakon og kyrkjelydspedagog" class="contact-avatar">
+      <div class="contact-title" id="contactTitle">Diakon og kyrkjelydspedagog</div>
+      <div class="contact-name" id="contactName">PER ØYVIND FREDIN</div>
+      <div class="contact-info" id="contactPhones"><a href="tel:+4761216272">61 21 62 72</a> / <a
+          href="tel:+4740165789">40 16 57 89</a></div>
+      <div class="contact-info"><a href="mailto:per.fredin@nord-fron.kommune.no"
+          id="contactEmail">per.fredin@nord-fron.kommune.no</a></div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3 id="footerContactTitle">Kontaktinformasjon</h3>
+        <p><strong id="footerPostLabel">Postadresse:</strong><br><span id="footerPostAddress">Nedregata 50, 2640
+            Vinstra</span></p>
+        <p><strong id="footerVisitLabel">Besøksadresse:</strong><br><span id="footerVisitAddress">Nedregata 54, 2640
+            Vinstra</span></p>
+        <p><strong id="footerPhoneLabel">Telefon:</strong> <a href="tel:+4761216290" id="footerPhone">61216290</a></p>
+      </div>
+
+      <div class="footer-section">
+        <h3 id="footerLinksTitle">Lenker</h3>
+        <div class="footer-links">
+          <a href="https://www.facebook.com/NordFronKyrkja" id="footerFacebook" target="_blank" rel="noopener">Kyrkja på Facebook →</a>
+          <a href="https://www.youtube.com/channel/UC2J612OOU0PkYcT1fhArr_Q/featured" id="footerYoutube" target="_blank" rel="noopener">Kyrkja sin Youtube-kanal →</a>
+          <a href="https://www.kirken.no/nn-NO/" id="footerWeb" target="_blank" rel="noopener">Kirken.no →</a>
+          <a href="https://www.kirken.no/nb-NO/bispedommer/Hamar/" id="footerBlog" target="_blank" rel="noopener">Hamar bispedomme sin nettside →</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-credit">made by Lumino &lt;3</div>
+  </footer>
+
+  <!-- Privacy Policy Modal -->
+  <div id="privacyModal" class="modal-overlay" style="display: none;" role="dialog" aria-modal="true"
+    aria-labelledby="privacyModalTitle" aria-hidden="true">
+    <div class="modal-content modal-content--privacy">
+      <div class="modal-header">
+        <h2 id="privacyModalTitle">Personvernerklæring</h2>
+        <button type="button" class="btn-close-modal" id="btnPrivacyModalClose" aria-label="Lukk modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="privacyModalBody"></div>
+    </div>
+  </div>
+
+  <!-- Time Selection Modal -->
+  <div id="timeModal" class="modal-overlay" style="display: none;" role="dialog" aria-modal="true"
+    aria-labelledby="timeModalTitle" aria-hidden="true">
+    <div class="modal-content modal-content--time">
+      <div class="modal-header">
+        <h2 id="timeModalTitle">Velg tidspunkt</h2>
+        <button type="button" class="btn-close-modal" id="btnTimeModalClose" aria-label="Lukk modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="timeSelectionGrid" class="time-selection-grid" role="radiogroup" aria-labelledby="timeModalTitle">
+          <!-- Time slots buttons will be generated here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div id="successModal" class="modal-overlay" style="display: none;" role="dialog" aria-modal="true"
+    aria-labelledby="successModalTitle" aria-hidden="true">
+    <div class="modal-content modal-content--success">
+      <div class="modal-header">
+        <h2 id="successModalTitle">Takk!</h2>
+        <button type="button" class="btn-close-modal" id="btnSuccessModalClose" aria-label="Lukk modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body" style="text-align: center;">
+        <div style="margin: 1.5rem 0 1rem 0;">
+          <i class="fa-solid fa-circle-check" style="font-size: 3.5rem; color: #10b981;"></i>
+        </div>
+        <p id="successModalMsg" style="margin-bottom: 1.5rem; font-size: 1.1rem; font-weight: 500; color: var(--text);">
+        </p>
+        <div id="successModalDetails"
+          style="background-color: var(--bg); border: 1px solid var(--input-border); border-radius: 10px; padding: 1.25rem; text-align: left; font-size: 0.95rem; color: var(--text-muted);">
+        </div>
+        <button type="button" class="btn-submit" id="btnSuccessModalOk"
+          style="margin-top: 1.75rem; width: 100%;">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/a11y.js"></script>
+  <script>
+    const langButtons = document.querySelectorAll('.lang-dropdown-menu button');
+    const sections = document.querySelectorAll('.lang-section');
+    const themeToggle = document.getElementById('themeToggle');
+    const timeSelectionGrid = document.getElementById('timeSelectionGrid');
+    let selectedTime = null; // To store the selected time
+    let timeDialog = null;
+    let privacyDialog = null;
+    let successDialog = null;
+
+
+    const skipTexts = {
+      nyn: 'Hopp til hovudinnhald',
+      bok: 'Hopp til hovedinnhold',
+      eng: 'Skip to main content',
+      ukr: 'Перейти до основного вмісту',
+      rus: 'Перейти к основному содержимому'
+    };
+
+    const translations = {
+      nyn: {
+        pageTitle: "Humanitær hjelp",
+        lblSubtitle: "Nord-Fron kyrkjelege fellesråd",
+        skipLink: 'Hopp til hovudinnhald',
+        formTitle: "Registrering",
+        lblName: "Namn",
+        lblAdults: "Antall voksne du forsørger",
+        lblChildren: "Antall barn du forsørger",
+        lblEmail: "E-postadresse (Valgfritt)",
+        lblTime: "Velg tidspunkt",
+        btnSubmit: "Send inn registrering",
+        btnShowTime: "Vis tilgjengelege tider",
+        btnHideTime: "Skjul tider",
+        success: "Takk! Di registrering er motteke.",
+        successTitle: "Registrering motteke!",
+        errorTime: "Ver venleg og vel eit tidspunkt.",
+        errorName: "Ver venleg og skriv inn namnet ditt.",
+        errorAdults: "Ver venleg og oppgi antall voksne.",
+        themeLight: "Lyst tema",
+        themeDark: "Mørkt tema",
+        footerContactTitle: "Kontaktinformasjon",
+        footerLinksTitle: "Lenker",
+        footerPostLabel: "Postadresse:",
+        footerPostAddress: "Nedregata 50, 2640 Vinstra",
+        footerVisitLabel: "Besøksadresse:",
+        footerVisitAddress: "Nedregata 54, 2640 Vinstra",
+        footerPhoneLabel: "Telefon:",
+        footerPhone: "61216290",
+        footerFacebook: "Kyrkja på Facebook →",
+        footerYoutube: "Kyrkja sin Youtube-kanal →",
+        footerWeb: "Kirken.no →",
+        footerBlog: "Hamar bispedomme sin nettside →",
+        contactTitle: "Diakon og kyrkjelydspedagog",
+        contactName: "PER ØYVIND FREDIN",
+        contactPhones: "61 21 62 72 / 40 16 57 89",
+        accTitle: "Tilgjengelegheit",
+        accFontSize: "Skriftstorleik",
+        accSizeNormal: "Normal",
+        accSizeLarge: "Stor (+25%)",
+        accSizeXLarge: "Ekstra stor (+50%)",
+        accContrast: "Kontrast",
+        accContrastStandard: "Standard",
+        accContrastHcDark: "Mørk høgkontrast",
+        accContrastHcLight: "Ljos høgkontrast",
+        accSpacing: "Tekstavstand",
+        accSpacingStandard: "Standard",
+        accSpacingIncreased: "Auka avstand",
+        themeToggle: "Bytt fargetema",
+        cdCaption: "Før utdeling",
+        cdDays: "dagar",
+        cdHours: "timar",
+        cdMinutes: "minutt",
+        cdSeconds: "sekund",
+        cdExpired: "Utdelinga startar no!",
+        summaryTitle: "Registrering motteke!",
+        summaryEdit: "Endre informasjon",
+        summaryName: "Namn",
+        summaryTime: "Tidspunkt",
+        summaryAdults: "Vaksne",
+        summaryChildren: "Born",
+        allSlotsFull: "Alle tider er opptekne. Ring kontoret.",
+        errorNameInvalid: "Ver venleg og skriv eit gyldig namn (minimum 2 teikn)."
+      },
+      bok: {
+        pageTitle: "Humanitær hjelp",
+        lblSubtitle: "Nord-Fron kirkelige fellesråd",
+        skipLink: 'Hopp til hovedinnhold',
+        formTitle: "Registrering",
+        lblName: "Navn",
+        lblAdults: "Antall voksne du forsørger",
+        lblChildren: "Antall barn du forsørger",
+        lblEmail: "E-postadresse (Valgfritt)",
+        lblTime: "Velg tidspunkt",
+        btnSubmit: "Send inn registrering",
+        btnShowTime: "Vis tilgjengelige tider",
+        btnHideTime: "Skjul tider",
+        success: "Takk! Din registrering er mottatt.",
+        successTitle: "Registrering mottatt!",
+        errorTime: "Vennligst velg et tidspunkt.",
+        errorName: "Vennligst skriv inn navnet ditt.",
+        errorAdults: "Vennligst oppgi antall voksne.",
+        themeLight: "Lyst tema",
+        themeDark: "Mørkt tema",
+        footerContactTitle: "Kontaktinformasjon",
+        footerLinksTitle: "Lenker",
+        footerPostLabel: "Postadresse:",
+        footerPostAddress: "Nedregata 50, 2640 Vinstra",
+        footerVisitLabel: "Besøksadresse:",
+        footerVisitAddress: "Nedregata 54, 2640 Vinstra",
+        footerPhoneLabel: "Telefon:",
+        footerPhone: "61216290",
+        footerFacebook: "Kirken på Facebook →",
+        footerYoutube: "Kirkens Youtube-kanal →",
+        footerWeb: "Kirken.no →",
+        footerBlog: "Hamar bispedømme sin nettside →",
+        contactTitle: "Diakon og soknepedagog",
+        contactName: "PER ØYVIND FREDIN",
+        contactPhones: "61 21 62 72 / 40 16 57 89",
+        accTitle: "Tilgengelighet",
+        accFontSize: "Skriftstørrelse",
+        accSizeNormal: "Normal",
+        accSizeLarge: "Stor (+25%)",
+        accSizeXLarge: "Extra stor (+50%)",
+        accContrast: "Kontrast",
+        accContrastStandard: "Standard",
+        accContrastHcDark: "Mørk høykontrast",
+        accContrastHcLight: "Lys høykontrast",
+        accSpacing: "Tekstavstand",
+        accSpacingStandard: "Standard",
+        accSpacingIncreased: "Økt avstand",
+        themeToggle: "Bytt fargetema",
+        cdCaption: "Før utdelingen",
+        cdDays: "dager",
+        cdHours: "timer",
+        cdMinutes: "minutter",
+        cdSeconds: "sekunder",
+        cdExpired: "Utdelingen starter nå!",
+        summaryTitle: "Registrering mottatt!",
+        summaryEdit: "Endre informasjon",
+        summaryName: "Navn",
+        summaryTime: "Tidspunkt",
+        summaryAdults: "Voksne",
+        summaryChildren: "Barn",
+        allSlotsFull: "Alle tider er opptatt. Ring kontoret.",
+        errorNameInvalid: "Vennligst skriv inn et gyldig navn (minimum 2 tegn)."
+      },
+      eng: {
+        pageTitle: "Humanitarian Aid",
+        lblSubtitle: "Nord-Fron Parish Council",
+        skipLink: 'Skip to main content',
+        formTitle: "Registration",
+        lblName: "Name",
+        lblAdults: "Number of adults you provide food for",
+        lblChildren: "Number of children you provide food for",
+        lblEmail: "Email address (Optional)",
+        lblTime: "Choose a convenient time",
+        btnSubmit: "Submit registration",
+        btnShowTime: "Show available times",
+        btnHideTime: "Hide times",
+        success: "Thank you! Your registration has been received.",
+        successTitle: "Registration Received!",
+        errorTime: "Please select a time.",
+        errorName: "Please enter your name.",
+        errorAdults: "Please enter the number of adults.",
+        themeLight: "Light theme",
+        themeDark: "Dark theme",
+        footerContactTitle: "Contact Information",
+        footerLinksTitle: "Links",
+        footerPostLabel: "Postal Address:",
+        footerPostAddress: "Nedregata 50, 2640 Vinstra",
+        footerVisitLabel: "Visit Address:",
+        footerVisitAddress: "Nedregata 54, 2640 Vinstra",
+        footerPhoneLabel: "Phone:",
+        footerPhone: "61216290",
+        footerFacebook: "Church on Facebook →",
+        footerYoutube: "Church Youtube Channel →",
+        footerWeb: "Kirken.no →",
+        footerBlog: "Hamar Diocese Website →",
+        contactTitle: "Deacon and Parish Educator",
+        contactName: "PER ØYVIND FREDIN",
+        contactPhones: "61 21 62 72 / 40 16 57 89",
+        accTitle: "Accessibility",
+        accFontSize: "Font Size",
+        accSizeNormal: "Normal",
+        accSizeLarge: "Large (+25%)",
+        accSizeXLarge: "Extra Large (+50%)",
+        accContrast: "Contrast",
+        accContrastStandard: "Standard",
+        accContrastHcDark: "High Contrast (Dark)",
+        accContrastHcLight: "High Contrast (Light)",
+        accSpacing: "Text Spacing",
+        accSpacingStandard: "Standard",
+        accSpacingIncreased: "Increased Spacing",
+        themeToggle: "Toggle color theme",
+        cdCaption: "Until distribution",
+        cdDays: "days",
+        cdHours: "hours",
+        cdMinutes: "minutes",
+        cdSeconds: "seconds",
+        cdExpired: "Distribution is starting now!",
+        summaryTitle: "Registration Received!",
+        summaryEdit: "Edit information",
+        summaryName: "Name",
+        summaryTime: "Time slot",
+        summaryAdults: "Adults",
+        summaryChildren: "Children",
+        allSlotsFull: "All time slots are full. Please call the office.",
+        errorNameInvalid: "Please enter a valid name (minimum 2 characters)."
+      },
+      ukr: {
+        pageTitle: "Гуманітарна допомога",
+        lblSubtitle: "Церковна спільна рада Норд-Фрона",
+        formTitle: "Реєстрація",
+        lblName: "Ім'я",
+        lblAdults: "Кількість дорослих, яких ви забезпечуєте харчуванням",
+        lblChildren: "Кількість дітей, яких ви забезпечуєте харчуванням",
+        lblEmail: "Електронна пошта (Необов'язково)",
+        lblTime: "Оберіть зручний час",
+        btnSubmit: "Надіслати реєстрацію",
+        btnShowTime: "Показати доступний час",
+        btnHideTime: "Приховати час",
+        success: "Дякуємо! Вашу реєстрацію отримано.",
+        successTitle: "Реєстрацію прийнято!",
+        errorTime: "Будь ласка, оберіть час.",
+        errorName: "Будь ласка, введіть ваше ім'я.",
+        errorAdults: "Будь ласка, вкажіть кількість дорослих.",
+        themeLight: "Світла тема",
+        themeDark: "Темна тема",
+        footerContactTitle: "Контактна інформація",
+        footerLinksTitle: "Посилання",
+        footerPostLabel: "Поштова адреса:",
+        footerPostAddress: "Nedregata 50, 2640 Vinstra",
+        footerVisitLabel: "Адреса відвідування:",
+        footerVisitAddress: "Nedregata 54, 2640 Vinstra",
+        footerPhoneLabel: "Телефон:",
+        footerPhone: "61216290",
+        footerFacebook: "Церква на Facebook →",
+        footerYoutube: "Youtube-канал церкви →",
+        footerWeb: "Kirken.no →",
+        footerBlog: "Веб-сайт єпископату Хамара →",
+        contactTitle: "Дияк та прихідський педагог",
+        contactName: "ПЕР ОЙВИНД ФРЕДИН",
+        contactPhones: "61 21 62 72 / 40 16 57 89",
+        accTitle: "Доступність",
+        accFontSize: "Розмір шрифту",
+        accSizeNormal: "Звичайний",
+        accSizeLarge: "Великий (+25%)",
+        accSizeXLarge: "Дуже великий (+50%)",
+        accContrast: "Контрастність",
+        accContrastStandard: "Стандартна",
+        accContrastHcDark: "Контрастна темна",
+        accContrastHcLight: "Контрастна світла",
+        accSpacing: "Інтервали тексту",
+        accSpacingStandard: "Стандартні",
+        accSpacingIncreased: "Збільшені",
+        themeToggle: "Змінити тему",
+        cdCaption: "До початку роздачі",
+        cdDays: "днів",
+        cdHours: "годин",
+        cdMinutes: "хвилин",
+        cdSeconds: "секунд",
+        cdExpired: "Роздача починається!",
+        summaryTitle: "Реєстрацію прийнято!",
+        summaryEdit: "Змінити інформацію",
+        summaryName: "Ім’я",
+        summaryTime: "Час візиту",
+        summaryAdults: "Дорослих",
+        summaryChildren: "Дітей",
+        allSlotsFull: "Усі слоти заповнені. Будь ласка, зателефонуйте в офіс.",
+        errorNameInvalid: "Будь ласка, введіть дійсне ім’я (мінімум 2 символи)."
+      },
+      rus: {
+        pageTitle: "Гуманитарная помощь",
+        lblSubtitle: "Церковный совместный совет Норд-Фрона",
+        formTitle: "Регистрация",
+        lblName: "Имя",
+        lblAdults: "Количество взрослых, которых вы обеспечиваете питанием",
+        lblChildren: "Количество детей, которых вы обеспечиваете питанием",
+        lblEmail: "Электронная почта (Необязательно)",
+        lblTime: "Выберите удобное время",
+        btnSubmit: "Отправить регистрацию",
+        btnShowTime: "Показать доступное время",
+        btnHideTime: "Скрыть время",
+        success: "Спасибо! Ваша регистрация успешно принята.",
+        successTitle: "Регистрация принята!",
+        errorTime: "Пожалуйста, выберите время.",
+        errorName: "Пожалуйста, введите ваше имя.",
+        errorAdults: "Пожалуйста, укажите количество взрослых.",
+        themeLight: "Светлая тема",
+        themeDark: "Темная тема",
+        footerContactTitle: "Контактная информация",
+        footerLinksTitle: "Ссылки",
+        footerPostLabel: "Почтовый адрес:",
+        footerPostAddress: "Nedregata 50, 2640 Vinstra",
+        footerVisitLabel: "Адрес посещения:",
+        footerVisitAddress: "Nedregata 54, 2640 Vinstra",
+        footerPhoneLabel: "Телефон:",
+        footerPhone: "61216290",
+        footerFacebook: "Facebook церкви →",
+        footerYoutube: "YouTube канал церкви →",
+        footerWeb: "Kirken.no →",
+        footerBlog: "Веб-сайт епархии Хамара →",
+        contactTitle: "Диакон и приходской воспитатель",
+        contactName: "ПЕР ОЙВИНД ФРЕДИН",
+        contactPhones: "61 21 62 72 / 40 16 57 89",
+        accTitle: "Доступность",
+        accFontSize: "Размер шрифта",
+        accSizeNormal: "Обычный",
+        accSizeLarge: "Крупный (+25%)",
+        accSizeXLarge: "Очень крупный (+50%)",
+        accContrast: "Контрастность",
+        accContrastStandard: "Стандартная",
+        accContrastHcDark: "Контрастная темная",
+        accContrastHcLight: "Контрастная светлая",
+        accSpacing: "Интервалы текста",
+        accSpacingStandard: "Стандартные",
+        accSpacingIncreased: "Увеличенные",
+        themeToggle: "Сменить тему",
+        cdCaption: "До начала раздачи",
+        cdDays: "дней",
+        cdHours: "часов",
+        cdMinutes: "минут",
+        cdSeconds: "секунд",
+        cdExpired: "Раздача начинается!",
+        summaryTitle: "Регистрация принята!",
+        summaryEdit: "Изменить информацию",
+        summaryName: "Имя",
+        summaryTime: "Время визита",
+        summaryAdults: "Взрослых",
+        summaryChildren: "Детей",
+        allSlotsFull: "Все слоты заняты. Пожалуйста, позвоните в офис.",
+        errorNameInvalid: "Пожалуйста, введите корректное имя (минимум 2 символа)."
+      }
+    };
+
+    let toastTimer = null;
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      if (toastTimer) clearTimeout(toastTimer);
+      toast.textContent = message;
+      toast.classList.add('show');
+      A11y.announce(message, 'assertive');
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+        toastTimer = null;
+      }, 4000);
+    }
+
+    function showFormStatus(message, type) {
+      const status = document.getElementById('formStatus');
+      status.textContent = message;
+      status.className = 'form-status form-status--' + type;
+      status.hidden = false;
+      A11y.announce(message, type === 'error' ? 'assertive' : 'polite');
+    }
+
+    function hideFormStatus() {
+      const status = document.getElementById('formStatus');
+      status.hidden = true;
+      status.textContent = '';
+    }
+
+    function formatDistributionDate(dateStr, startTime, endTime, lang) {
+      const parts = dateStr.split('-');
+      if (parts.length !== 3) return '';
+      const year = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1; // 0-indexed
+      const day = parseInt(parts[2], 10);
+
+      const dateObj = new Date(year, month, day);
+      if (isNaN(dateObj.getTime())) {
+        return '';
+      }
+      const dayOfWeek = dateObj.getDay();
+
+      const weekdays = {
+        nyn: ['søndag', 'måndag', 'tysdag', 'onsdag', 'torsdag', 'fredag', 'laurdag'],
+        bok: ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'],
+        eng: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        ukr: ['у неділю', 'у понеділок', 'у вівторок', 'у середу', 'у четвер', 'в пʼятницю', 'у суботу'],
+        rus: ['в воскресенье', 'в понедельник', 'во вторник', 'в среду', 'в четверг', 'в пятницу', 'в субботу']
+      };
+
+      const months = {
+        nyn: ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'],
+        bok: ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'],
+        eng: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        ukr: ['січня', 'лютого', 'березня', 'квітня', 'травня', 'червня', 'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня'],
+        rus: ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря']
+      };
+
+      const wd = weekdays[lang][dayOfWeek];
+      const m = months[lang][month];
+
+      if (lang === 'nyn') {
+        return `Matutdeling vil finne sted ${wd} ${day}. ${m} ${year} fra ${startTime} til ${endTime}.`;
+      } else if (lang === 'bok') {
+        return `Matutdeling finner sted ${wd} ${day}. ${m} ${year} fra kl. ${startTime} til ${endTime}.`;
+      } else if (lang === 'eng') {
+        return `Food distribution will take place on ${wd} ${day} ${m} ${year} from ${startTime} to ${endTime}.`;
+      } else if (lang === 'ukr') {
+        return `Роздача продуктів харчування відбудеться ${wd} ${day} ${m} ${year} року з ${startTime} до ${endTime}.`;
+      } else if (lang === 'rus') {
+        return `Раздача продуктов питания будет проходить ${wd} ${day} ${m} ${year} года с ${startTime} до ${endTime}.`;
+      }
+      return '';
+    }
+
+    function updateDistributionInfo() {
+      const settings = JSON.parse(localStorage.getItem('distribution_settings') || '{"date":"2026-06-12","startTime":"14:00","endTime":"17:00"}');
+      
+      const formattedNyn = formatDistributionDate(settings.date, settings.startTime, settings.endTime, 'nyn');
+      const formattedBok = formatDistributionDate(settings.date, settings.startTime, settings.endTime, 'bok');
+      const formattedEng = formatDistributionDate(settings.date, settings.startTime, settings.endTime, 'eng');
+      const formattedUkr = formatDistributionDate(settings.date, settings.startTime, settings.endTime, 'ukr');
+      const formattedRus = formatDistributionDate(settings.date, settings.startTime, settings.endTime, 'rus');
+
+      const elNyn = document.getElementById('infoUtdelingNyn');
+      const elBok = document.getElementById('infoUtdelingBok');
+      const elEng = document.getElementById('infoUtdelingEng');
+      const elUkr = document.getElementById('infoUtdelingUkr');
+      const elRus = document.getElementById('infoUtdelingRus');
+
+      if (elNyn) elNyn.textContent = formattedNyn;
+      if (elBok) elBok.textContent = formattedBok;
+      if (elEng) elEng.textContent = formattedEng;
+      if (elUkr) elUkr.textContent = formattedUkr;
+      if (elRus) elRus.textContent = formattedRus;
+    }
+
+    function setLanguage(lang) {
+      lang = A11y.migrateLang(lang);
+      let targetSection = document.querySelector('.lang-section[data-lang="' + lang + '"]');
+      if (!targetSection) {
+        lang = 'nyn';
+        targetSection = document.querySelector('.lang-section[data-lang="nyn"]');
+      }
+
+      sections.forEach(s => s.classList.remove('active'));
+      targetSection.classList.add('active');
+
+      langButtons.forEach(b => {
+        const active = b.dataset.lang === lang;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+
+      const activeBtn = Array.from(langButtons).find(b => b.dataset.lang === lang);
+      if (activeBtn) {
+        document.getElementById('currentLangLabel').textContent = activeBtn.textContent.trim();
+      }
+
+      const consentLabel = document.getElementById('lblLabelConsent');
+      if (consentLabel) {
+        const consentPlaceholders = {
+          nyn: 'Eg har lese og samtykkjer til <a href="#" target="_blank">behandling av personopplysningar</a>',
+          bok: 'Jeg har lest og samtykker til <a href="#" target="_blank">behandling av personopplysninger</a>',
+          eng: 'I have read and agree to the <a href="#" target="_blank">processing of personal data</a>',
+          ukr: 'Я прочитав(-ла) та погоджуюся на <a href="#" target="_blank">обробку персональних даних</a>',
+          rus: 'Я прочитал(-а) и согласен(-а) на <a href="#" target="_blank">обработку персональных данных</a>'
+        };
+        consentLabel.innerHTML = consentPlaceholders[lang] || consentPlaceholders.nyn;
+      }
+
+      const privacyTexts = {
+        nyn: {
+          title: 'Personvernerklæring',
+          body: `
+            <h3>1. Innleiing</h3>
+            <p>Nord-Fron kyrkjelege fellesråd / Den norske kyrkja (heretter kalla «Organisasjonen» eller «Vi») respekterer din rett til personvern og forpliktar seg til å beskytte dine personopplysningar i samsvar med EUs personvernforordning (GDPR) og personopplysningsloven.</p>
+            <p>Dette dokumentet forklarer kva opplysningar vi samlar inn, kvifor og korleis vi beskyttar dei.</p>
+            <h3>2. Kva opplysningar samlar vi inn</h3>
+            <p>Ved registrering samlar vi inn følgjande opplysningar:</p>
+            <ul>
+              <li>Namn (obligatorisk).</li>
+              <li>E-postadresse (valfritt, for kontakt).</li>
+              <li>Informasjon om husstanden (antall voksne og barn) for å førebu riktig hjelp.</li>
+              <li>Valt tidspunkt for besøk (for logistikk).</li>
+            </ul>
+            <p>Vi samlar ikkje inn sensitive personopplysningar (som helse, religion osv.) utan ditt eksplisitte samtykke.</p>
+            <h3>3. Formålet med behandlinga</h3>
+            <p>Vi behandlar opplysningene dine utelukkande for følgjande formål:</p>
+            <ul>
+              <li>Registrering av besøket ditt og køhandtering.</li>
+              <li>Førebuing av mat og hjelp basert på storleiken på husstanden din.</li>
+              <li>Å kontakte deg ved endringar i tidsplanen eller for å bekrefte detaljar.</li>
+            </ul>
+            <h3>4. Rettsleg grunnlag</h3>
+            <p>Behandlinga av dine opplysningar skjer på grunnlag av ditt frivillige samtykke (Art. 6.1.a GDPR), som du gir ved å huke av i samtykkeboksen og sende inn skjemaet.</p>
+            <h3>5. Lagring og sikkerheit</h3>
+            <p><strong>Sikkerheit:</strong> Vi bruker tekniske og organisatoriske tiltak for å beskytte opplysningane dine mot uautorisert tilgang, tap eller endring. Berre autoriserte frivillige og tilsette har tilgang til opplysningane.</p>
+            <p><strong>Lagringstid:</strong> Vi lagrar berre opplysningane dine så lenge det er nødvendig for formåla skildra i punkt 3. Etter at utdelinga er fullført, slettast eller anonymiserast opplysningane innan 30 dagar.</p>
+            <h3>6. Overføring til tredjepart</h3>
+            <p>Vi sel eller overfører ikkje personopplysningane dine til tredjepartar. Berre frivillige i Organisasjonen som treng opplysningane for å utføre oppgåvene sine har tilgang.</p>
+            <h3>7. Dine rettar</h3>
+            <p>I samsvar med GDPR har du rett til å:</p>
+            <ul>
+              <li>Be om innsyn i opplysningane vi har registrert om deg.</li>
+              <li>Kreve retting av feilaktige opplysningar.</li>
+              <li>Kreve sletting av opplysningane dine (retten til å bli gløymt).</li>
+              <li>Trekke tilbake samtykket ditt når som helst.</li>
+            </ul>
+            <p>For å bruke desse rettane, vennlegst kontakt oss (kontaktinformasjon under). Dersom du mener at behandlinga vår bryt med regelverket, kan du klage til Datatilsynet.</p>
+            <h3>8. Kontaktinformasjon</h3>
+            <p>Hvis du har spørsmål om denne personvernerklæringen eller ønsker å benytte deg av dine rettar, ta kontakt med oss:</p>
+            <p><strong>E-post:</strong> <a href="mailto:venke.helen.sletten@nord-fron.kommune.no">venke.helen.sletten@nord-fron.kommune.no</a><br>
+            <strong>Telefon:</strong> <a href="tel:+4761216290">+47 61 21 62 90</a><br>
+            <strong>Adresse:</strong> Nedregata 54, 2640 Vinstra</p>
+          `
+        },
+        bok: {
+          title: 'Personvernerklæring',
+          body: `
+            <h3>1. Innledning</h3>
+            <p>Nord-Fron kyrkjelege fellesråd / Den norske kyrkja (heretter kalt «Organisasjonen» eller «Vi») respekterer din rett til personvern og forplikter seg til å beskytte dine personopplysninger i samsvar med EUs personvernforordning (GDPR) og personopplysningsloven.</p>
+            <p>Dette dokumentet forklarer hvilke opplysninger vi samler inn, hvorfor og hvordan vi beskytter dem.</p>
+            <h3>2. Hvilke opplysninger samler vi inn</h3>
+            <p>Ved registrering samler vi inn følgende opplysninger:</p>
+            <ul>
+              <li>Navn (obligatorisk).</li>
+              <li>E-postadresse (valgfritt, for kontakt).</li>
+              <li>Informasjon om husstanden (antall voksne og barn) for å forberede riktig hjelp.</li>
+              <li>Valgt tidspunkt for besøk (for logistikk).</li>
+            </ul>
+            <p>Vi samler ikke inn sensitive personopplysninger (som helse, religion osv.) uten ditt eksplisitte samtykke.</p>
+            <h3>3. Formålet med behandlingen</h3>
+            <p>Vi behandler opplysningene dine utelukkande for følgende formål:</p>
+            <ul>
+              <li>Registrering av besøket ditt og køhåndtering.</li>
+              <li>Forberedelse av mat og hjelp basert på størrelsen på husstanden din.</li>
+              <li>Å kontakte deg ved endringer i timeplanen eller for å bekrefte detaljer.</li>
+            </ul>
+            <h3>4. Rettslig grunnlag</h3>
+            <p>Behandlingen av dine opplysninger skjer på grunnlag av ditt frivillige samtykke (Art. 6.1.a GDPR), som du gir ved å huke av i samtykkeboksen og sende inn skjemaet.</p>
+            <h3>5. Lagring og sikkerhet</h3>
+            <p><strong>Sikkerhet:</strong> Vi bruker tekniske og organisatoriske tiltak for å beskytte opplysningene dine mot uautorisert tilgang, tap eller endring. Kun autoriserte frivillige og ansatte har tilgang til opplysningene.</p>
+            <p><strong>Lagringstid:</strong> Vi lagrer bare opplysningene dine så lenge det er nødvendig for formålene beskrevet i punkt 3. Etter at utdelingen er fullført, slettes eller anonymiseres opplysningene innen 30 dager.</p>
+            <h3>6. Overføring til tredjepart</h3>
+            <p>Vi selger eller overfører ikke personopplysningene dine til tredjeparter. Kun frivillige i Organisasjonen som trenger opplysningene for å utføre oppgavene sine har tilgang.</p>
+            <h3>7. Dine rettigheter</h3>
+            <p>I samsvar med GDPR har du rett til å:</p>
+            <ul>
+              <li>Be om innsyn i opplysningene vi har registrert om deg.</li>
+              <li>Kreve retting av feilaktige opplysninger.</li>
+              <li>Kreve sletting av opplysningene dine (retten til å bli glemt).</li>
+              <li>Trekke tilbake samtykket ditt når som helst.</li>
+            </ul>
+            <p>For å bruke disse rettighetene, vennligst kontakt oss (kontaktinformasjon under). Dersom du mener at behandlingen vår bryt med regelverket, kan du klage til Datatilsynet.</p>
+            <h3>8. Kontaktinformasjon</h3>
+            <p>Hvis du har spørsmål om denne personvernerklæringen eller ønsker å benytte deg av dine rettigheter, ta kontakt med oss:</p>
+            <p><strong>E-post:</strong> <a href="mailto:venke.helen.sletten@nord-fron.kommune.no">venke.helen.sletten@nord-fron.kommune.no</a><br>
+            <strong>Telefon:</strong> <a href="tel:+4761216290">+47 61 21 62 90</a><br>
+            <strong>Adresse:</strong> Nedregata 54, 2640 Vinstra</p>
+          `
+        },
+        eng: {
+          title: 'Privacy Policy',
+          body: `
+            <h3>1. Introduction</h3>
+            <p>Nord-Fron kyrkjelege fellesråd / Den norske kyrkja (hereinafter "the Organization" or "We") respects your right to privacy and is committed to protecting your personal data in accordance with the General Data Protection Regulation (GDPR) and Norwegian data protection law (Personopplysningsloven).</p>
+            <p>This document explains what data we collect, why, and how we protect it.</p>
+            <h3>2. What Data We Collect</h3>
+            <p>During registration, we collect the following data:</p>
+            <ul>
+              <li>First name and last name (required).</li>
+              <li>Email address (optional, for contact).</li>
+              <li>Information about the household (number of adults and children) to prepare appropriate aid.</li>
+              <li>Selected time of visit (for logistics).</li>
+            </ul>
+            <p>We do not collect sensitive data (such as health status, religious beliefs, etc.) without your explicit separate consent.</p>
+            <h3>3. Why We Use Your Data (Purposes of Processing)</h3>
+            <p>We process your data solely for the following purposes:</p>
+            <ul>
+              <li>Registering your visit and queue management.</li>
+              <li>Preparing food and aid based on the size of your household.</li>
+              <li>Contacting you in case of schedule changes or to confirm details.</li>
+            </ul>
+            <h3>4. Legal Basis</h3>
+            <p>The processing of your data is based on your voluntary consent (Art. 6.1.a GDPR), which you give by ticking the consent box and submitting the form.</p>
+            <h3>5. Data Storage and Security</h3>
+            <p><strong>Security:</strong> We implement technical and organizational measures to protect your data from unauthorized access, loss, or alteration. Access is restricted to authorized volunteers and employees.</p>
+            <p><strong>Storage Period:</strong> We store your data only as long as necessary for the purposes specified in Section 3. After the distribution is completed, the data is deleted or anonymized within 30 days.</p>
+            <h3>6. Data Transfer to Third Parties</h3>
+            <p>We do not sell or transfer your personal data to third parties. Access to the information is restricted to Organization volunteers who need it to perform their duties.</p>
+            <h3>7. Your Rights</h3>
+            <p>Under the GDPR, you have the right to:</p>
+            <ul>
+              <li>Request access to the data we store about you.</li>
+              <li>Request rectification of inaccurate data.</li>
+              <li>Request erasure of your data (right to be forgotten).</li>
+              <li>Withdraw your consent to data processing at any time.</li>
+            </ul>
+            <p>To exercise these rights, please contact us (contacts below). If you believe we violate your rights, you can file a complaint with the Norwegian Data Protection Authority (Datatilsynet).</p>
+            <h3>8. Contact Information</h3>
+            <p>If you have any questions regarding this Privacy Policy or wish to exercise your rights, please contact us:</p>
+            <p><strong>Email:</strong> <a href="mailto:venke.helen.sletten@nord-fron.kommune.no">venke.helen.sletten@nord-fron.kommune.no</a><br>
+            <strong>Phone:</strong> <a href="tel:+4761216290">+47 61 21 62 90</a><br>
+            <strong>Address:</strong> Nedregata 54, 2640 Vinstra</p>
+          `
+        },
+        ukr: {
+          title: 'Політика конфіденційності',
+          body: `
+            <h3>1. Вступ</h3>
+            <p>Nord-Fron kyrkjelege fellesråd / Den norske kyrkja (далі — «Організація» або «Ми») поважає ваше право на конфіденційність і зобов'язується захищати ваші персональні дані відповідно до Загального регламенту про захист даних (GDPR) та норвезького законодавства (Personopplysningsloven).</p>
+            <p>Цей документ пояснює, які дані ми збираємо, навіщо і як ми їх захищаємо.</p>
+            <h3>2. Які дані ми збираємо</h3>
+            <p>При реєстрації через наш сайт ми збираємо наступні дані:</p>
+            <ul>
+              <li>Ім'я та прізвище (обов'язково).</li>
+              <li>Адреса електронної пошти (опціонально, для зв'язку).</li>
+              <li>Інформація про склад сім'ї (кількість дорослих і дітей) для підготовки відповідної допомоги.</li>
+              <li>Обраний час візиту (для логістики).</li>
+            </ul>
+            <p>Ми не збираємо чутливі дані (такі як стан здоров'я, релігійні переконання тощо) без вашої явної окремої згоди.</p>
+            <h3>3. Навіщо ми використовуємо ваші дані (Цілі обробки)</h3>
+            <p>Ми обробляємо ваші дані виключно для наступних цілей:</p>
+            <ul>
+              <li>Реєстрації вашого візиту та управління чергою.</li>
+              <li>Підготовки ресурсів та допомоги з урахуванням розміру вашої родини.</li>
+              <li>Зв'язку з вами у разі змін у розкладі або для підтвердження деталей.</li>
+            </ul>
+            <h3>4. Правові підстави</h3>
+            <p>Обробка ваших даних здійснюється на підставі вашої добровільної згоди (ст. 6.1.a GDPR), яку ви надаєте, відзначаючи відповідний чекбокс і надсилаючи форму.</p>
+            <h3>5. Зберігання та захист даних</h3>
+            <p><strong>Безпека:</strong> Ми застосовуємо технічні та організаційні заходи для захисту ваших даних від несанкційного доступу, втрати чи зміни. Доступ до даних мають лише уповноважені волонтери та співробітники.</p>
+            <p><strong>Терміни зберігання:</strong> Ми зберігаємо ваші дані лише доти, доки це необхідно для цілей, зазначених у пункті 3. Після завершення заходу/надання допомоги дані видаляються або анонімізуються протягом 30 днів.</p>
+            <h3>6. Передача даних третім особам</h3>
+            <p>Ми не продаємо і не передаємо ваші персональні дані третім особам. Доступ до інформації мають лише волонтери Організації, яким вона необхідна для виконання їхніх обов'язків.</p>
+            <h3>7. Ваші права</h3>
+            <p>Згідно з GDPR, ви маєте право:</p>
+            <ul>
+              <li>Запитувати доступ до даних, які ми про вас зберігаємо.</li>
+              <li>Вимагати виправлення неточних даних.</li>
+              <li>Вимагати видалення ваших даних (право бути забутим).</li>
+              <li>Відкликати свою згоду на обробку даних у будь-який час.</li>
+            </ul>
+            <p>Для реалізації цих прав, будь ласка, зв'яжіться з нами (контакти нижче). Якщо ви вважаєте, що ми порушуємо ваші права, ви можете подати скаргу до Норвезького органу із захисту даних (Datatilsynet).</p>
+            <h3>8. Контактна інформація</h3>
+            <p>Якщо у вас є питання щодо цієї Політики конфіденційності або ви хочете скористатися своїми правами, зв'яжіться з нами:</p>
+            <p><strong>Email:</strong> <a href="mailto:venke.helen.sletten@nord-fron.kommune.no">venke.helen.sletten@nord-fron.kommune.no</a><br>
+            <strong>Телефон:</strong> <a href="tel:+4761216290">+47 61 21 62 90</a><br>
+            <strong>Адреса:</strong> Nedregata 54, 2640 Vinstra</p>
+          `
+        },
+        rus: {
+          title: 'Политика конфиденциальности',
+          body: `
+            <h3>1. Введение</h3>
+            <p>Nord-Fron kyrkjelege fellesråd / Den norske kyrkja (далее — «Организация» или «Мы») уважает ваше право на конфиденциальность и обязуется защищать ваши персональные данные в соответствии с Общим регламентом по защите данных (GDPR) и норвежским законодательством (Personopplysningsloven).</p>
+            <p>Этот документ объясняет, какие данные мы собираем, зачем и как мы их защищаем.</p>
+            <h3>2. Какие данные мы собираем</h3>
+            <p>При регистрации через наш сайт мы собираем следующие данные:</p>
+            <ul>
+              <li>Имя и фамилия (обязательно).</li>
+              <li>Адрес электронной почты (опционально, для связи).</li>
+              <li>Информация о составе семьи (количество взрослых и детей) для подготовки соответствующей помощи.</li>
+              <li>Выбранное время визита (для логистики).</li>
+            </ul>
+            <p>Мы не собираем чувствительные данные (такие как состояние здоровья, религиозные убеждения и т.д.) без вашего явного отдельного согласия.</p>
+            <h3>3. Зачем мы используем ваши данные (Цели обработки)</h3>
+            <p>Мы обрабатываем ваши данные исключительно для следующих целей:</p>
+            <ul>
+              <li>Регистрации вашего визита и управления очередью.</li>
+              <li>Подготовки ресурсов и помощи с учетом размера вашей семьи.</li>
+              <li>Связи с вами в случае изменений в расписании или для подтверждения деталей.</li>
+            </ul>
+            <h3>4. Правовые основания</h3>
+            <p>Обработка ваших данных осуществляется на основании вашего добровольного согласия (ст. 6.1.a GDPR), которое вы даете, отмечая соответствующий чекбокс и отправляя форму.</p>
+            <h3>5. Хранение и защита данных</h3>
+            <p><strong>Безопасность:</strong> Мы применяем технические и организационные меры для защиты ваших данных от несанкционированного доступа, утери или изменения. Доступ к данным имеют только уполномоченные волонтеры и сотрудники.</p>
+            <p><strong>Сроки хранения:</strong> Мы храним ваши данные только до тех пор, пока это необходимо для целей, указанных в пункте 3. После завершения мероприятия/оказания помощи данные удаляются или анонимизируются в течение 30 дней.</p>
+            <h3>6. Передача данных третьим лицам</h3>
+            <p>Мы не продаем и не передаем ваши персональные данные третьим лицам. Доступ к информации имеют только волонтеры Организации, которым она необходима для выполнения их обязанностей.</p>
+            <h3>7. Ваши права</h3>
+            <p>Согласно GDPR, вы имеете право:</p>
+            <ul>
+              <li>Запрашивать доступ к данным, которые мы о вас храним.</li>
+              <li>Требовать исправления неточных данных.</li>
+              <li>Требовать удаления ваших данных (право быть забытым).</li>
+              <li>Отозвать свое согласие на обработку данных в любое время.</li>
+            </ul>
+            <p>Для реализации этих прав, пожалуйста, свяжитесь с нами (контакты ниже). Если вы считаете, что мы нарушаем ваши права, вы можете подать жалобу в Норвежский орган по защите данных (Datatilsynet).</p>
+            <h3>8. Контактная информация</h3>
+            <p>Если у вас есть вопросы относительно этой Политики конфиденциальности или вы хотите воспользоваться своими правами, свяжитесь с нами:</p>
+            <p><strong>Email:</strong> <a href="mailto:venke.helen.sletten@nord-fron.kommune.no">venke.helen.sletten@nord-fron.kommune.no</a><br>
+            <strong>Телефон:</strong> <a href="tel:+4761216290">+47 61 21 62 90</a><br>
+            <strong>Адрес:</strong> Nedregata 54, 2640 Vinstra</p>
+          `
+        }
+      };
+
+      const privacyTitle = document.getElementById('privacyModalTitle');
+      const privacyBody = document.getElementById('privacyModalBody');
+      if (privacyTitle && privacyBody) {
+        privacyTitle.textContent = privacyTexts[lang]?.title || privacyTexts.nyn.title;
+        privacyBody.innerHTML = privacyTexts[lang]?.body || privacyTexts.nyn.body;
+      }
+
+      const privacyCloseBtn = document.getElementById('btnPrivacyModalClose');
+      if (privacyCloseBtn) {
+        const closeTexts = {
+          nyn: 'Lukk modal',
+          bok: 'Lukk modal',
+          eng: 'Close modal',
+          ukr: 'Закрити модальне вікно',
+          rus: 'Закрыть модальное окно'
+        };
+        privacyCloseBtn.setAttribute('aria-label', closeTexts[lang] || 'Lukk modal');
+      }
+
+      const t = translations[lang] || translations['nyn'];
+      A11y.htmlLang(lang);
+      document.title = t.pageTitle;
+
+      document.getElementById('skipLink').textContent = t.skipLink || skipTexts[lang] || skipTexts.nyn;
+      document.getElementById('themeToggle').setAttribute('aria-label', t.themeToggle || 'Bytt fargetema');
+      document.getElementById('accToggle').setAttribute('aria-label', t.accTitle);
+      document.getElementById('formTitle').textContent = t.formTitle;
+      document.getElementById('lblLabelName').textContent = t.lblName;
+      document.getElementById('lblLabelAdults').textContent = t.lblAdults;
+      document.getElementById('lblLabelChildren').textContent = t.lblChildren;
+      document.getElementById('lblLabelEmail').textContent = t.lblEmail;
+      document.getElementById('lblLabelTime').textContent = t.lblTime;
+
+      const toggleBtn = document.getElementById('txtToggleTime');
+      if (toggleBtn) {
+        toggleBtn.textContent = selectedTime ? selectedTime : t.btnShowTime;
+      }
+
+      const timeModalTitle = document.getElementById('timeModalTitle');
+      if (timeModalTitle) {
+        timeModalTitle.textContent = t.lblTime;
+      }
+      const closeTexts = {
+        nyn: 'Lukk modal',
+        bok: 'Lukk modal',
+        eng: 'Close modal',
+        ukr: 'Закрити модальне вікно',
+        rus: 'Закрыть модальное окно'
+      };
+      const timeCloseBtn = document.getElementById('btnTimeModalClose');
+      if (timeCloseBtn) {
+        timeCloseBtn.setAttribute('aria-label', closeTexts[lang] || 'Lukk modal');
+      }
+
+      const successModalTitle = document.getElementById('successModalTitle');
+      if (successModalTitle) {
+        successModalTitle.textContent = t.successTitle || 'Takk!';
+      }
+      const successCloseBtn = document.getElementById('btnSuccessModalClose');
+      if (successCloseBtn) {
+        successCloseBtn.setAttribute('aria-label', closeTexts[lang] || 'Lukk modal');
+      }
+
+      document.getElementById('btnSubmit').textContent = t.btnSubmit;
+
+      // Update footer
+      document.getElementById('footerContactTitle').textContent = t.footerContactTitle;
+      document.getElementById('footerLinksTitle').textContent = t.footerLinksTitle;
+      document.getElementById('footerPostLabel').textContent = t.footerPostLabel;
+      document.getElementById('footerPostAddress').textContent = t.footerPostAddress;
+      document.getElementById('footerVisitLabel').textContent = t.footerVisitLabel;
+      document.getElementById('footerVisitAddress').textContent = t.footerVisitAddress;
+      document.getElementById('footerPhoneLabel').textContent = t.footerPhoneLabel;
+      document.getElementById('footerPhone').textContent = t.footerPhone;
+      document.getElementById('footerFacebook').textContent = t.footerFacebook;
+      document.getElementById('footerYoutube').textContent = t.footerYoutube;
+      document.getElementById('footerWeb').textContent = t.footerWeb;
+      document.getElementById('footerBlog').textContent = t.footerBlog;
+
+      // Update contact block
+      document.getElementById('contactTitle').textContent = t.contactTitle;
+      document.getElementById('contactName').textContent = t.contactName;
+
+      const phonesDiv = document.getElementById('contactPhones');
+      if (phonesDiv) {
+        phonesDiv.innerHTML = t.contactPhones.split('/').map(num => {
+          const cleanNum = num.trim().replace(/\s+/g, '');
+          return `<a href="tel:+47${cleanNum}">${num.trim()}</a>`;
+        }).join(' / ');
+      }
+
+      // Update accessibility labels
+      document.getElementById('lblAccFontSize').textContent = t.accFontSize;
+      document.getElementById('txtSizeNormal').textContent = t.accSizeNormal;
+      document.getElementById('txtSizeLarge').textContent = t.accSizeLarge;
+      document.getElementById('txtSizeXLarge').textContent = t.accSizeXLarge;
+      document.getElementById('lblAccContrast').textContent = t.accContrast;
+      document.getElementById('txtContrastStandard').textContent = t.accContrastStandard;
+      document.getElementById('txtContrastHcDark').textContent = t.accContrastHcDark;
+      document.getElementById('txtContrastHcLight').textContent = t.accContrastHcLight;
+      document.getElementById('lblAccSpacing').textContent = t.accSpacing;
+      document.getElementById('txtSpacingStandard').textContent = t.accSpacingStandard;
+      document.getElementById('txtSpacingIncreased').textContent = t.accSpacingIncreased;
+
+      const currentTheme = document.documentElement.dataset.theme;
+      const sunIcon = document.getElementById('sunIcon');
+      const moonIcon = document.getElementById('moonIcon');
+      if (currentTheme === 'dark') {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+      } else {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+      }
+
+
+      // Update summary block labels if visible
+      const regSummaryTitle = document.getElementById('regSummaryTitle');
+      const btnEditReg = document.getElementById('btnEditReg');
+      if (regSummaryTitle) regSummaryTitle.textContent = t.summaryTitle;
+      if (btnEditReg) btnEditReg.textContent = t.summaryEdit;
+
+      const myRegStr = localStorage.getItem('myRegistration');
+      if (myRegStr) {
+        const registration = JSON.parse(myRegStr);
+        const regSummaryDetails = document.getElementById('regSummaryDetails');
+        if (regSummaryDetails) {
+          const childrenRow = registration.children > 0
+            ? `<div class="reg-summary__row"><span class="reg-summary__row-label">${t.summaryChildren}</span><span class="reg-summary__row-value">${registration.children}</span></div>`
+            : '';
+          regSummaryDetails.innerHTML = `
+            <div class="reg-summary__row"><span class="reg-summary__row-label">${t.summaryName}</span><span class="reg-summary__row-value">${registration.name}</span></div>
+            <div class="reg-summary__row"><span class="reg-summary__row-label">${t.summaryTime}</span><span class="reg-summary__row-value">${registration.time}</span></div>
+            <div class="reg-summary__row"><span class="reg-summary__row-label">${t.summaryAdults}</span><span class="reg-summary__row-value">${registration.adults}</span></div>
+            ${childrenRow}
+          `;
+        }
+      }
+
+      localStorage.setItem('lang', lang);
+      if (typeof checkHeaderWrapping === 'function') {
+        checkHeaderWrapping();
+      }
+      updateDistributionInfo();
+    }
+
+    function setTheme(theme) {
+      document.documentElement.dataset.theme = theme;
+      const sunIcon = document.getElementById('sunIcon');
+      const moonIcon = document.getElementById('moonIcon');
+      if (theme === 'dark') {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+      } else {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+      }
+      localStorage.setItem('theme', theme);
+    }
+
+    function generateTimeSlots() {
+      timeSelectionGrid.innerHTML = ''; // Clear existing buttons
+      const settings = JSON.parse(localStorage.getItem('distribution_settings') || '{"date":"2026-06-12","startTime":"14:00","endTime":"17:00"}');
+      const startParts = settings.startTime.split(':').map(Number);
+      const endParts = settings.endTime.split(':').map(Number);
+      const startTime = startParts[0] * 60 + startParts[1];
+      const endTime = endParts[0] * 60 + endParts[1];
+      const interval = 5;        // 5-minute intervals
+
+      // Count registrations per time slot
+      const registrations = JSON.parse(localStorage.getItem('registrations') || '[]');
+      const slotCounts = {};
+      registrations.forEach(reg => {
+        if (reg.time) {
+          slotCounts[reg.time] = (slotCounts[reg.time] || 0) + 1;
+        }
+      });
+
+      let appendedCount = 0;
+      for (let i = startTime; i < endTime; i += interval) {
+        const startHour = Math.floor(i / 60);
+        const startMinute = i % 60;
+        const endHour = Math.floor((i + interval) / 60);
+        const endMinute = (i + interval) % 60;
+
+        const formatTime = (h, m) => `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+
+        const timeValue = `${formatTime(startHour, startMinute)}-${formatTime(endHour, endMinute)}`;
+
+        // Skip slot if already reserved by 2 or more users, unless it is the currently selected slot
+        const count = slotCounts[timeValue] || 0;
+        if (count >= 2 && selectedTime !== timeValue) {
+          continue;
+        }
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.setAttribute('role', 'radio');
+        button.setAttribute('aria-checked', 'false');
+        button.dataset.value = timeValue;
+        button.textContent = timeValue;
+
+        if (selectedTime === timeValue) {
+          button.classList.add('active');
+          button.setAttribute('aria-checked', 'true');
+        }
+
+        button.addEventListener('click', () => {
+          document.querySelectorAll('.time-selection-grid button').forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-checked', 'false');
+          });
+          button.classList.add('active');
+          button.setAttribute('aria-checked', 'true');
+          selectedTime = timeValue;
+          document.getElementById('inputTime').value = timeValue;
+
+          const toggleBtnText = document.getElementById('txtToggleTime');
+          if (toggleBtnText) {
+            toggleBtnText.textContent = timeValue;
+          }
+          const openBtn = document.getElementById('btnOpenTimeModal');
+          if (openBtn) {
+            openBtn.classList.add('selected');
+          }
+          if (timeDialog) {
+            timeDialog.close();
+          }
+        });
+        timeSelectionGrid.appendChild(button);
+        appendedCount++;
+      }
+
+      // If no slots are available, disable the time picker button and show a note
+      const noSlotsNote = document.getElementById('noSlotsNote');
+      const btnOpen = document.getElementById('btnOpenTimeModal');
+      if (appendedCount === 0) {
+        const lang = A11y.migrateLang(localStorage.getItem('lang') || 'nyn');
+        const t = translations[lang] || translations.nyn;
+        if (btnOpen) btnOpen.disabled = true;
+        if (noSlotsNote) { noSlotsNote.textContent = t.allSlotsFull; noSlotsNote.hidden = false; }
+      } else {
+        if (btnOpen) btnOpen.disabled = false;
+        if (noSlotsNote) noSlotsNote.hidden = true;
+      }
+    }
+
+
+    const langDropdown = document.getElementById('langDropdown');
+    const langDropdownToggle = document.getElementById('langDropdownToggle');
+
+    langDropdownToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = langDropdown.classList.toggle('open');
+      langDropdownToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (langDropdown && !langDropdown.contains(e.target)) {
+        langDropdown.classList.remove('open');
+        langDropdownToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    langButtons.forEach(b => b.addEventListener('click', () => {
+      setLanguage(b.dataset.lang);
+      langDropdown.classList.remove('open');
+      langDropdownToggle.setAttribute('aria-expanded', 'false');
+    }));
+    themeToggle.addEventListener('click', () => {
+      const current = document.documentElement.dataset.theme;
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    const privacyModal = document.getElementById('privacyModal');
+    const btnPrivacyModalClose = document.getElementById('btnPrivacyModalClose');
+    const consentLabelEl = document.getElementById('lblLabelConsent');
+
+    if (privacyModal && consentLabelEl) {
+      privacyDialog = A11y.bindDialog(privacyModal, { trigger: consentLabelEl });
+
+      const originalClose = privacyDialog.close;
+      privacyDialog.close = function () {
+        document.body.style.overflow = '';
+        originalClose();
+      };
+
+      const originalOpen = privacyDialog.open;
+      privacyDialog.open = function () {
+        document.body.style.overflow = 'hidden';
+        originalOpen();
+      };
+
+      consentLabelEl.addEventListener('click', (e) => {
+        const link = e.target.closest('a');
+        if (link) {
+          e.preventDefault();
+          e.stopPropagation();
+          privacyDialog.open();
+        }
+      });
+    }
+
+    if (btnPrivacyModalClose && privacyDialog) {
+      btnPrivacyModalClose.addEventListener('click', () => {
+        privacyDialog.close();
+      });
+    }
+
+    const timeModal = document.getElementById('timeModal');
+    const btnOpenTimeModal = document.getElementById('btnOpenTimeModal');
+    const btnTimeModalClose = document.getElementById('btnTimeModalClose');
+
+    if (timeModal && btnOpenTimeModal) {
+      timeDialog = A11y.bindDialog(timeModal, { trigger: btnOpenTimeModal });
+
+      const originalClose = timeDialog.close;
+      timeDialog.close = function () {
+        document.body.style.overflow = '';
+        originalClose();
+      };
+
+      const originalOpen = timeDialog.open;
+      timeDialog.open = function () {
+        document.body.style.overflow = 'hidden';
+        originalOpen();
+      };
+
+      btnOpenTimeModal.addEventListener('click', () => {
+        generateTimeSlots();
+        timeDialog.open();
+      });
+    }
+
+    if (btnTimeModalClose && timeDialog) {
+      btnTimeModalClose.addEventListener('click', () => {
+        timeDialog.close();
+      });
+    }
+
+    const successModal = document.getElementById('successModal');
+    const btnSuccessModalClose = document.getElementById('btnSuccessModalClose');
+    const btnSuccessModalOk = document.getElementById('btnSuccessModalOk');
+
+    if (successModal) {
+      successDialog = A11y.bindDialog(successModal, { trigger: document.getElementById('regForm') });
+
+      const originalClose = successDialog.close;
+      successDialog.close = function () {
+        document.body.style.overflow = '';
+        originalClose();
+      };
+
+      const originalOpen = successDialog.open;
+      successDialog.open = function () {
+        document.body.style.overflow = 'hidden';
+        originalOpen();
+      };
+    }
+
+    if (btnSuccessModalClose && successDialog) {
+      btnSuccessModalClose.addEventListener('click', () => {
+        successDialog.close();
+      });
+    }
+    if (btnSuccessModalOk && successDialog) {
+      btnSuccessModalOk.addEventListener('click', () => {
+        successDialog.close();
+      });
+    }
+
+    // "Edit information" — restore the form, hide summary
+    const btnEditRegEl = document.getElementById('btnEditReg');
+    if (btnEditRegEl) {
+      btnEditRegEl.addEventListener('click', () => {
+        localStorage.removeItem('myRegistration');
+        const regForm = document.getElementById('regForm');
+        const regSummary = document.getElementById('regSummary');
+        if (regForm) { regForm.hidden = false; regForm.reset(); }
+        if (regSummary) regSummary.hidden = true;
+        const formTitle = document.getElementById('formTitle');
+        if (formTitle) formTitle.hidden = false;
+        selectedTime = null;
+        document.getElementById('inputTime').value = '';
+        const txtToggleTime = document.getElementById('txtToggleTime');
+        const currentLang = A11y.migrateLang(localStorage.getItem('lang') || 'nyn');
+        const t = translations[currentLang] || translations.nyn;
+        if (txtToggleTime) txtToggleTime.textContent = t.btnShowTime;
+        const openBtn = document.getElementById('btnOpenTimeModal');
+        if (openBtn) { openBtn.classList.remove('selected'); openBtn.disabled = false; }
+        const noSlotsNote = document.getElementById('noSlotsNote');
+        if (noSlotsNote) noSlotsNote.hidden = true;
+        // Focus first form field
+        document.getElementById('inputName').focus();
+      });
+    }
+
+    function showSuccessModal(reg, lang) {
+      const msgEl = document.getElementById('successModalMsg');
+      const detailsEl = document.getElementById('successModalDetails');
+      const t = translations[lang] || translations.nyn;
+
+      if (msgEl) {
+        msgEl.textContent = t.success;
+      }
+
+      if (detailsEl) {
+        const labels = {
+          nyn: { name: 'Namn', time: 'Tidspunkt', family: 'Husstand' },
+          bok: { name: 'Navn', time: 'Tidspunkt', family: 'Husstand' },
+          eng: { name: 'Name', time: 'Time slot', family: 'Household' },
+          ukr: { name: "Ім'я", time: 'Час', family: 'Сім\'я' },
+          rus: { name: 'Имя', time: 'Время', family: 'Семья' }
+        };
+        const l = labels[lang] || labels.nyn;
+        const totalPeople = reg.adults + reg.children;
+        const familyText = `${totalPeople} (${reg.adults} + ${reg.children})`;
+
+        detailsEl.innerHTML = `
+          <div style="margin-bottom: 0.5rem;"><strong>${l.name}:</strong> ${reg.name}</div>
+          <div style="margin-bottom: 0.5rem;"><strong>${l.time}:</strong> ${reg.time}</div>
+          <div><strong>${l.family}:</strong> ${familyText}</div>
+        `;
+      }
+
+      if (successDialog) {
+        successDialog.open();
+      }
+    }
+
+    // Clamp number inputs in real-time to prevent manual over-entry
+    (function () {
+      function clampInput(el) {
+        const min = parseInt(el.min) || 0;
+        const max = parseInt(el.max);
+        let val = parseInt(el.value);
+        if (isNaN(val)) return;
+        if (!isNaN(max) && val > max) el.value = max;
+        if (val < min) el.value = min;
+      }
+      const adultsEl = document.getElementById('inputAdults');
+      const childrenEl = document.getElementById('inputChildren');
+      if (adultsEl) adultsEl.addEventListener('input', () => clampInput(adultsEl));
+      if (childrenEl) childrenEl.addEventListener('input', () => clampInput(childrenEl));
+    })();
+
+    document.getElementById('regForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      hideFormStatus();
+
+      const currentLang = A11y.migrateLang(localStorage.getItem('lang') || 'nyn');
+      const t = translations[currentLang] || translations.nyn;
+
+      const name = document.getElementById('inputName').value.trim();
+      if (!name) {
+        showToast(t.errorName);
+        document.getElementById('inputName').focus();
+        return;
+      }
+      // Validate name: min 2 chars, letters only (Latin, Cyrillic, Norwegian special chars, hyphen, space, apostrophe)
+      const nameRegex = /^[\p{L}\s\-']{2,}$/u;
+      if (!nameRegex.test(name)) {
+        showToast(t.errorNameInvalid || t.errorName);
+        document.getElementById('inputName').focus();
+        return;
+      }
+
+      const adults = parseInt(document.getElementById('inputAdults').value || 0);
+      if (!adults || adults < 1) {
+        showToast(t.errorAdults);
+        document.getElementById('inputAdults').focus();
+        return;
+      }
+      if (adults > 7) {
+        const errAdultsMax = { nyn: 'Maks 7 vaksne.', bok: 'Maks 7 voksne.', eng: 'Maximum 7 adults.', ukr: 'Максимум 7 дорослих.', rus: 'Максимум 7 взрослых.' };
+        showToast(errAdultsMax[currentLang] || errAdultsMax.nyn);
+        document.getElementById('inputAdults').value = 7;
+        document.getElementById('inputAdults').focus();
+        return;
+      }
+
+      const children = parseInt(document.getElementById('inputChildren').value || 0);
+      if (children > 5) {
+        const errChildrenMax = { nyn: 'Maks 5 born.', bok: 'Maks 5 barn.', eng: 'Maximum 5 children.', ukr: 'Максимум 5 дітей.', rus: 'Максимум 5 детей.' };
+        showToast(errChildrenMax[currentLang] || errChildrenMax.nyn);
+        document.getElementById('inputChildren').value = 5;
+        document.getElementById('inputChildren').focus();
+        return;
+      }
+
+      if (!selectedTime) {
+        showToast(t.errorTime);
+        document.getElementById('btnOpenTimeModal').focus();
+        return;
+      }
+
+      const consentChecked = document.getElementById('inputConsent').checked;
+      if (!consentChecked) {
+        const consentErrors = {
+          nyn: 'Du må samtykkje til behandling av personopplysningar.',
+          bok: 'Du må samtykke til behandling av personopplysninger.',
+          eng: 'You must agree to the processing of personal data.',
+          ukr: 'Ви повинні погодитися на обробку персональних даних.',
+          rus: 'Вы должны согласиться на обработку персональных данных.'
+        };
+        showToast(consentErrors[currentLang] || consentErrors.nyn);
+        document.getElementById('inputConsent').focus();
+        return;
+      }
+
+      // Save to localStorage
+      const email = document.getElementById('inputEmail').value || '';
+
+      const registration = {
+        id: 'reg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        name: name,
+        adults: adults,
+        children: children,
+        email: email,
+        time: selectedTime,
+        timestamp: new Date().toISOString()
+      };
+
+      const btnSubmit = document.getElementById('btnSubmit');
+      const originalBtnText = btnSubmit.textContent;
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = '...';
+
+      const sheetRow = {
+        id: registration.id,
+        name: registration.name,
+        adults: registration.adults,
+        children: registration.children,
+        email: registration.email,
+        timeslot: registration.time,
+        'registred at': registration.timestamp
+      };
+
+      fetch(CONFIG.API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          data: [sheetRow]
+        })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
+      })
+      .then(() => {
+        const registrations = JSON.parse(localStorage.getItem('registrations') || '[]');
+        registrations.push(registration);
+        localStorage.setItem('registrations', JSON.stringify(registrations));
+
+        showSuccessModal(registration, currentLang);
+        localStorage.setItem('myRegistration', JSON.stringify(registration));
+        displayRegistrationSummary(registration);
+        
+        document.getElementById('regForm').reset();
+        selectedTime = null;
+        document.getElementById('inputTime').value = '';
+        document.querySelectorAll('.time-selection-grid button').forEach(btn => {
+          btn.classList.remove('active');
+          btn.setAttribute('aria-checked', 'false');
+        });
+        const txtToggleTime = document.getElementById('txtToggleTime');
+        if (txtToggleTime) {
+          txtToggleTime.textContent = t.btnShowTime;
+        }
+        const openBtn = document.getElementById('btnOpenTimeModal');
+        if (openBtn) {
+          openBtn.classList.remove('selected');
+        }
+      })
+      .catch(err => {
+        console.error('Error saving registration:', err);
+        alert(currentLang === 'rus' ? 'Ошибка сохранения регистрации. Пожалуйста, попробуйте еще раз.' : 'Error saving registration. Please try again.');
+      })
+      .finally(() => {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = originalBtnText;
+      });
+    });
+
+    function setAccessibilityFontSize(size) {
+      document.documentElement.dataset.fontSize = size;
+      localStorage.setItem('acc_font_size', size);
+
+      document.querySelectorAll('#accFontSizeOptions button').forEach(btn => {
+        if (btn.dataset.size === size) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    function setAccessibilityContrast(contrast) {
+      document.documentElement.dataset.contrast = contrast;
+      localStorage.setItem('acc_contrast', contrast);
+
+      document.querySelectorAll('#accContrastOptions button').forEach(btn => {
+        if (btn.dataset.contrast === contrast) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    function setAccessibilitySpacing(spacing) {
+      document.documentElement.dataset.fontSpacing = spacing;
+      localStorage.setItem('acc_spacing', spacing);
+
+      document.querySelectorAll('#accSpacingOptions button').forEach(btn => {
+        if (btn.dataset.spacing === spacing) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    // Accessibility Panel Toggle
+    const accToggle = document.getElementById('accToggle');
+    const accPanel = document.getElementById('accPanel');
+
+    accToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isVisible = accPanel.style.display === 'flex';
+      accPanel.style.display = isVisible ? 'none' : 'flex';
+      A11y.setExpanded(accToggle, !isVisible);
+    });
+
+    // Close panel when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!accPanel.contains(e.target) && e.target !== accToggle && !accToggle.contains(e.target)) {
+        accPanel.style.display = 'none';
+        A11y.setExpanded(accToggle, false);
+      }
+    });
+
+    // Font Size Listeners
+    document.querySelectorAll('#accFontSizeOptions button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setAccessibilityFontSize(btn.dataset.size);
+      });
+    });
+
+    // Contrast Listeners
+    document.querySelectorAll('#accContrastOptions button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setAccessibilityContrast(btn.dataset.contrast);
+      });
+    });
+
+    // Spacing Listeners
+    document.querySelectorAll('#accSpacingOptions button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setAccessibilitySpacing(btn.dataset.spacing);
+      });
+    });
+
+    // Initialize accessibility settings on page load
+    const storedFontSize = localStorage.getItem('acc_font_size') || 'normal';
+    const storedContrast = localStorage.getItem('acc_contrast') || 'standard';
+    const storedSpacing = localStorage.getItem('acc_spacing') || 'standard';
+
+    setAccessibilityFontSize(storedFontSize);
+    setAccessibilityContrast(storedContrast);
+    setAccessibilitySpacing(storedSpacing);
+
+
+
+
+
+    function displayRegistrationSummary(registration) {
+      const currentLang = A11y.migrateLang(localStorage.getItem('lang') || 'nyn');
+      const t = translations[currentLang] || translations.nyn;
+
+      const regForm = document.getElementById('regForm');
+      const regSummary = document.getElementById('regSummary');
+      const regSummaryTitle = document.getElementById('regSummaryTitle');
+      const regSummaryDetails = document.getElementById('regSummaryDetails');
+      const btnEditReg = document.getElementById('btnEditReg');
+      const formTitle = document.getElementById('formTitle');
+
+      if (regForm && regSummary) {
+        regForm.hidden = true;
+        regSummary.hidden = false;
+        if (formTitle) formTitle.hidden = true;
+
+        if (regSummaryTitle) regSummaryTitle.textContent = t.summaryTitle;
+        if (btnEditReg) btnEditReg.textContent = t.summaryEdit;
+
+        if (regSummaryDetails) {
+          const childrenRow = registration.children > 0
+            ? `<div class="reg-summary__row"><span class="reg-summary__row-label">${t.summaryChildren}</span><span class="reg-summary__row-value">${registration.children}</span></div>`
+            : '';
+          regSummaryDetails.innerHTML = `
+            <div class="reg-summary__row"><span class="reg-summary__row-label">${t.summaryName}</span><span class="reg-summary__row-value">${registration.name}</span></div>
+            <div class="reg-summary__row"><span class="reg-summary__row-label">${t.summaryTime}</span><span class="reg-summary__row-value">${registration.time}</span></div>
+            <div class="reg-summary__row"><span class="reg-summary__row-label">${t.summaryAdults}</span><span class="reg-summary__row-value">${registration.adults}</span></div>
+            ${childrenRow}
+          `;
+        }
+      }
+    }
+
+    setLanguage(A11y.migrateLang(localStorage.getItem('lang') || 'nyn'));
+    setTheme(localStorage.getItem('theme') || 'dark');
+    generateTimeSlots();
+
+    const myRegStr = localStorage.getItem('myRegistration');
+    if (myRegStr) {
+      try {
+        const registration = JSON.parse(myRegStr);
+        displayRegistrationSummary(registration);
+      } catch (e) {
+        console.error('Error parsing stored registration:', e);
+      }
+    }
+
+    // Fetch latest from server
+    fetch(CONFIG.API_URL)
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          const settingsRow = data.find(r => r.id === '__settings__');
+          if (settingsRow) {
+            localStorage.setItem('distribution_settings', JSON.stringify({
+              date: settingsRow.name,
+              startTime: settingsRow.timeslot,
+              endTime: settingsRow.email
+            }));
+          }
+          const regs = data
+            .filter(r => r.id && r.id !== '__settings__')
+            .map(r => ({
+              id: r.id,
+              name: r.name,
+              adults: parseInt(r.adults || 1, 10),
+              children: parseInt(r.children || 0, 10),
+              email: r.email || '',
+              time: r.timeslot,
+              timestamp: r['registred at'] || new Date().toISOString()
+            }));
+          localStorage.setItem('registrations', JSON.stringify(regs));
+          
+          updateDistributionInfo();
+          generateTimeSlots();
+        }
+      })
+      .catch(err => console.error('Error fetching database:', err));
+  </script>
+
+</body>
+
+</html>
